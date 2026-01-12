@@ -2,11 +2,11 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+	selector: 'mrt-root',
+	imports: [],
+	templateUrl: './app.html',
+	styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('mentor-roulette-tracker');
+	
 }
