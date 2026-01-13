@@ -2,6 +2,9 @@
 	<h1 class="mr-auto text-2xl font-bold">Duties</h1>
 
 	<!-- Page Actions -->
+	<mrt-search-bar
+		[(ngModel)]="searchQuery"
+		placeholder="Search Duties..." />
 	<button
 		pButton
 		label="Add New Duty"
@@ -12,7 +15,7 @@
 
 <p-table
 	[columns]="cols"
-	[value]="duties()"
+	[value]="filteredDuties"
 	[loading]="isLoading()"
 	showGridlines="true"
 	stripedRows="true">

@@ -6,10 +6,18 @@ import { TableModule } from 'primeng/table';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { EditDutyModal } from "@app/components/edit-duty-modal/edit-duty-modal";
 import { ConfirmModal } from "@app/components/confirm-modal/confirm-modal";
+import { SearchBar } from '@app/components/search-bar/search-bar';
 
 @Component({
 	selector: 'mrt-page-duties',
-	imports: [TableModule, ButtonModule, ProgressSpinnerModule, EditDutyModal, ConfirmModal],
+	imports: [
+		TableModule,
+		ButtonModule,
+		ProgressSpinnerModule,
+		EditDutyModal,
+		ConfirmModal,
+		SearchBar,
+	],
 	templateUrl: './duties.page.html',
 	styleUrl: './duties.page.scss',
 	providers: [DutiesService],
@@ -29,6 +37,8 @@ export class DutiesPage implements OnInit {
 	public isLoadingDelete = signal(false);
 	public showDeleteConfirmModal = signal(false);
 	public dutyToDeleteId = signal<number | null>(null);
+
+	public searchQuery = signal<string>('');
 
 	constructor() {
 		this.cols = [
@@ -103,5 +113,15 @@ export class DutiesPage implements OnInit {
 				this.reload();
 			},
 		}).add(() => this.isLoadingDelete.set(false));
+	}
+
+	public get filteredDuties(): DutyModel[] {
+		const query = this.searchQuery().toLowerCase();
+		return this.duties().filter(duty =>
+			duty.name?.toLowerCase().includes(query) ||
+			duty.expansionLabel?.toLowerCase().includes(query) ||
+			duty.dutyTypeLabel?.toLowerCase().includes(query) ||
+			(duty.levelRequirement !== null && duty.levelRequirement !== undefined && duty.levelRequirement.toString().includes(query))
+		);
 	}
 }
