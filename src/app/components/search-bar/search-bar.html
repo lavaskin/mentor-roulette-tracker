@@ -1,0 +1,9 @@
+<p-iconField iconPosition="left">
+	<p-inputIcon class="pi pi-search" />
+	<input
+		pInputText type="text"
+		[placeholder]="placeholder"
+		[(ngModel)]="ngModel"
+		(ngModelChange)="onInputChange($event)"
+		[size]="size" />
+</p-iconField>
