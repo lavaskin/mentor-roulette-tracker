@@ -2,31 +2,32 @@
 	modal="true"
 	[(visible)]="visible"
 	(visibleChange)="visibleChange.emit($event)"
-	[header]="isNew ? 'Add New Duty' : 'Edit Duty'">
+	[header]="isNew ? 'Add New Duty' : 'Edit Duty'"
+	[style]="{width: '350px'}">
 
 	@if (duty != null) {
-		<div class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4" style="height: 350px">
 			<input
 				type="text"
 				pInputText
 				[(ngModel)]="duty.name"
 				placeholder="Duty Name" />
 
+			<p-select
+				[options]="dutyTypes"
+				[(ngModel)]="duty.dutyType"
+				placeholder="Duty Type" />
+
+			<p-select
+				[options]="expansions"
+				[(ngModel)]="duty.expansion"
+				placeholder="Expansion" />
+
 			<input
 				type="number"
 				pInputText
 				[(ngModel)]="duty.levelRequirement"
 				placeholder="Level Requirement" />
-
-				<p-select
-					[options]="dutyTypes"
-					[(ngModel)]="duty.dutyType"
-					placeholder="Duty Type" />
-
-				 <p-select
-					[options]="expansions"
-					[(ngModel)]="duty.expansion"
-					placeholder="Expansion" />
 		</div>
 
 		<div class="mt-4 flex justify-end gap-4">
