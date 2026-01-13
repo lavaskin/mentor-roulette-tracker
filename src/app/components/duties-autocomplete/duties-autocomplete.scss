@@ -1,0 +1,16 @@
+:host {
+	display: block;
+	width: 100%;
+}
+
+p-autocomplete {
+	width: 100%;
+
+	::ng-deep .p-autocomplete {
+		width: 100%;
+	}
+
+	::ng-deep .p-autocomplete-input {
+		width: 100%;
+	}
+}
