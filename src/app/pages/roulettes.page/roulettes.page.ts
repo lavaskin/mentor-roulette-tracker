@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ConfirmModal } from '@app/components/confirm-modal/confirm-modal';
 import { EditMentorLogModal } from '@app/components/edit-mentor-log-modal/edit-mentor-log-modal';
-import { JobsAutocomplete } from '@app/components/jobs-autocomplete/jobs-autocomplete';
+import { SearchBar } from '@app/components/search-bar/search-bar';
 import { MentorRouletteLogModel } from '@app/models/entity/mentor-roulette-log.model';
 import { MentorRouletteLogService } from '@app/services/mentor-roulette-log.service';
 import { ButtonModule } from 'primeng/button';
@@ -14,6 +14,7 @@ import { TableModule } from 'primeng/table';
 		TableModule,
 		ButtonModule,
 		EditMentorLogModal,
+		SearchBar,
 	],
 	templateUrl: './roulettes.page.html',
 	styleUrl: './roulettes.page.scss',
@@ -34,6 +35,8 @@ export class RoulettesPage {
 	public isLoadingDelete = signal(false);
 	public showDeleteConfirmModal = signal(false);
 	public toDeleteId = signal<number | null>(null);
+
+	public searchQuery = signal<string>('');
 
 	constructor() {
 		this.cols = [
@@ -106,5 +109,15 @@ export class RoulettesPage {
 				this.reload();
 			},
 		}).add(() => this.isLoadingDelete.set(false));
+	}
+
+	public get filteredLogs(): MentorRouletteLogModel[] {
+		const query = this.searchQuery().toLowerCase().trim();
+		return this.logs().filter(log =>
+			log.playedJobLabel?.toLowerCase().includes(query) ||
+			(log.duty?.name?.toLowerCase().includes(query) ?? false) ||
+			(log.duty?.dutyTypeLabel?.toLowerCase().includes(query) ?? false) ||
+			(log.notes?.toLowerCase().includes(query) ?? false)
+		);
 	}
 }
