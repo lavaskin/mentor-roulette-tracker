@@ -1,4 +1,14 @@
-<h1 class="mb-4">Duties</h1>
+<div class="flex flex-row gap-4 items-center mb-4">
+	<h1 class="mr-auto">Duties</h1>
+
+	<!-- Page Actions -->
+	<button
+		pButton
+		label="Add Duty"
+		icon="pi pi-plus"
+		class="p-button-success"
+		(click)="openNewDutyModal()"></button>
+</div>
 
 <p-table
 	[columns]="cols"
@@ -15,6 +25,9 @@
 					<p-sortIcon [field]="col.field"></p-sortIcon>
 				</th>
 			}
+
+			<!-- Actions -->
+			<th></th>
 		</tr>
 	</ng-template>
 	<ng-template #body let-rowData let-columns="columns">
@@ -22,6 +35,31 @@
 			@for (col of columns; track col) {
 				<td>{{ rowData[col.field] }}</td>
 			}
+
+			<!-- Actions -->
+			<td class="flex gap-2">
+				<button
+					pButton
+					icon="pi pi-pencil"
+					class="p-button-rounded p-button-info p-button-sm"
+					(click)="openEditDutyModal(rowData)"></button>
+				<button
+					pButton
+					icon="pi pi-trash"
+					class="p-button-rounded p-button-danger p-button-sm"
+					(click)="openDeleteConfirmModal(rowData.dutyId)"></button>
+			</td>
 		</tr>
 	</ng-template>
 </p-table>
+
+<mrt-edit-duty-modal
+	[(visible)]="showEditDutyModal"
+	[duty]="selectedDuty()"
+	[isNew]="isNewDuty()"
+	(save)="onDutySaved($event)"/>
+
+<!-- Confirm Delete Modal -->
+<mrt-confirm-modal
+	[(visible)]="showDeleteConfirmModal"
+	(confirm)="deleteDuty(dutyToDeleteId())" />
