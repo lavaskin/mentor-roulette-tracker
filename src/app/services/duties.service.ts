@@ -20,7 +20,7 @@ export class DutiesService {
 	}
 
 	public getResultItems(searchOptions: SearchOptionsModel): Observable<ListResultItemModel[]> {
-		return this._http.post<ListResultItemModel[]>(`${this._baseUrl}`, { params: searchOptions });
+		return this._http.post<ListResultItemModel[]>(`${this._baseUrl}/getResultItems`, { params: searchOptions });
 	}
 
 	public create(duty: DutyModel): Observable<DutyModel> {
