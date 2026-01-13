@@ -20,6 +20,9 @@ export class DutiesService {
 	public createDuty(duty: DutyModel): Observable<DutyModel> {
 		return this._http.post<DutyModel>(`${this._baseUrl}`, duty);
 	}
+	public updateDuty(duty: DutyModel): Observable<DutyModel> {
+		return this._http.put<DutyModel>(`${this._baseUrl}/${duty.dutyId}`, duty);
+	}
 
 	public deleteDuty(dutyId: number): Observable<void> {
 		return this._http.delete<void>(`${this._baseUrl}/${dutyId}`);
