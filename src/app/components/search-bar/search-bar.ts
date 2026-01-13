@@ -17,7 +17,7 @@ export class SearchBar {
 	@Output() ngModelChange: EventEmitter<string> = new EventEmitter<string>();
 
 	@Input() placeholder: string = 'Search...';
-	@Input() size: 'small' | 'medium' | 'large' = 'medium';
+	@Input() size: 'small' | 'large' = 'large';
 
 	private debounceTimeout: any;
 
