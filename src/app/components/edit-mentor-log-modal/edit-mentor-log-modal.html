@@ -8,7 +8,11 @@
 	@if (log != null) {
 		<div class="flex flex-col gap-4" style="height: 350px">
 			
-			<!-- TODO: Flesh out form... -->
+			<mrt-duties-select />
+
+			<mrt-jobs-autocomplete
+				[(ngModel)]="log.playedJobId"
+				placeholder="Select a job" />
 
 		</div>
 

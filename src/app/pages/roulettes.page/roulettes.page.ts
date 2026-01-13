@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ConfirmModal } from '@app/components/confirm-modal/confirm-modal';
 import { EditMentorLogModal } from '@app/components/edit-mentor-log-modal/edit-mentor-log-modal';
+import { JobsAutocomplete } from '@app/components/jobs-autocomplete/jobs-autocomplete';
 import { MentorRouletteLogModel } from '@app/models/entity/mentor-roulette-log.model';
 import { MentorRouletteLogService } from '@app/services/mentor-roulette-log.service';
 import { ButtonModule } from 'primeng/button';
@@ -8,7 +9,12 @@ import { TableModule } from 'primeng/table';
 
 @Component({
 	selector: 'mrt-page-roulettes',
-	imports: [ConfirmModal, TableModule, ButtonModule, EditMentorLogModal],
+	imports: [
+		ConfirmModal,
+		TableModule,
+		ButtonModule,
+		EditMentorLogModal,
+	],
 	templateUrl: './roulettes.page.html',
 	styleUrl: './roulettes.page.scss',
 	providers: [MentorRouletteLogService],

@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DutyModel } from '@app/models/duty.model';
-import { MentorRouletteLogModel } from '@app/models/mentor-roulette-log.model';
+import { MentorRouletteLogModel } from '@app/models/entity/mentor-roulette-log.model';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import { DutiesSelect } from '../duties-select/duties-select';
+import { JobSelectOptions } from '@app/data/select-options.data';
+import { JobsAutocomplete } from '../jobs-autocomplete/jobs-autocomplete';
 
 @Component({
 	selector: 'mrt-edit-mentor-log-modal',
@@ -15,6 +17,8 @@ import { SelectModule } from 'primeng/select';
 		InputTextModule,
 		ButtonModule,
 		SelectModule,
+		DutiesSelect,
+		JobsAutocomplete,
 	],
 	templateUrl: './edit-mentor-log-modal.html',
 	styleUrl: './edit-mentor-log-modal.scss',
@@ -26,11 +30,11 @@ export class EditMentorLogModal {
 	@Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input() isLoading: boolean = false;
-	@Output() save: EventEmitter<DutyModel> = new EventEmitter<DutyModel>();
+	@Output() save: EventEmitter<MentorRouletteLogModel> = new EventEmitter<MentorRouletteLogModel>();
 
-	// ...
+	public jobOptions = JobSelectOptions;
 
-	public onSave(): void {
+	public onSave(): void {1
 		if (this.log) {
 			this.save.emit(this.log);
 		}
