@@ -8,11 +8,11 @@
 	@if (log != null) {
 		<div class="flex flex-col gap-4" style="height: 350px">
 			
-			<mrt-duties-select />
+			<mrt-duties-autocomplete
+				[(ngModel)]="log.dutyId" />
 
 			<mrt-jobs-autocomplete
-				[(ngModel)]="log.playedJobId"
-				placeholder="Select a job" />
+				[(ngModel)]="log.playedJobId" />
 
 		</div>
 

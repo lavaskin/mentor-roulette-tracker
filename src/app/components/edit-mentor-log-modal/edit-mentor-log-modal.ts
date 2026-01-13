@@ -4,9 +4,9 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { DutiesSelect } from '../duties-select/duties-select';
 import { JobSelectOptions } from '@app/data/select-options.data';
 import { JobsAutocomplete } from '../jobs-autocomplete/jobs-autocomplete';
+import { DutiesAutocomplete } from '../duties-autocomplete/duties-autocomplete';
 
 @Component({
 	selector: 'mrt-edit-mentor-log-modal',
@@ -15,7 +15,7 @@ import { JobsAutocomplete } from '../jobs-autocomplete/jobs-autocomplete';
 		InputTextModule,
 		ButtonModule,
 		SelectModule,
-		DutiesSelect,
+		DutiesAutocomplete,
 		JobsAutocomplete,
 	],
 	templateUrl: './edit-mentor-log-modal.html',
