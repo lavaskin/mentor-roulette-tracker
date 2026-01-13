@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MentorRouletteLogModel } from '@app/models/entity/mentor-roulette-log.model';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -12,7 +11,6 @@ import { JobsAutocomplete } from '../jobs-autocomplete/jobs-autocomplete';
 @Component({
 	selector: 'mrt-edit-mentor-log-modal',
 	imports: [
-		FormsModule,
 		DialogModule,
 		InputTextModule,
 		ButtonModule,
