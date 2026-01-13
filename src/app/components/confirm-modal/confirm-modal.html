@@ -1,0 +1,23 @@
+<p-dialog
+	modal="true"	
+	[(visible)]="visible"
+	header="Are you sure?">
+
+	<div class="flex justify-between gap-2">
+		<button
+			pButton
+			label="Cancel"
+			icon="pi pi-times"
+			size="small"
+			class="p-button-secondary"
+			(click)="visibleChange.emit(false); visible = false"></button>
+		
+		<button
+			pButton
+			label="Confirm"
+			icon="pi pi-check"
+			size="small"
+			[class.p-button-loading]="isLoading"
+			(click)="confirm.emit(true)"></button>
+	</div>
+</p-dialog>
