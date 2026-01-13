@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { DutyModel } from '@app/models/duty.model';
+import { DutyModel } from '@app/models/entity/duty.model';
 import { DutiesService } from '@app/services/duties.service';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -65,9 +65,6 @@ export class DutiesPage implements OnInit {
 	public openNewDutyModal(): void {
 		this.selectedDuty.set({
 			name: '',
-			levelRequirement: null,
-			expansionId: null,
-			dutyTypeId: null,
 		});
 
 		this.isNewDuty.set(true);

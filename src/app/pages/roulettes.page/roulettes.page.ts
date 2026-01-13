@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ConfirmModal } from '@app/components/confirm-modal/confirm-modal';
 import { EditMentorLogModal } from '@app/components/edit-mentor-log-modal/edit-mentor-log-modal';
-import { MentorRouletteLogModel } from '@app/models/mentor-roulette-log.model';
+import { MentorRouletteLogModel } from '@app/models/entity/mentor-roulette-log.model';
 import { MentorRouletteLogService } from '@app/services/mentor-roulette-log.service';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -52,12 +52,7 @@ export class RoulettesPage {
 	}
 
 	public openCreateModal(): void {
-		this.selectedLog.set({
-			dutyId: null,
-			notes: null,
-			playedJobId: null,
-			datePlayed: null,
-		});
+		this.selectedLog.set({});
 
 		this.isNewLog.set(true);
 		this.showEditModal.set(true);

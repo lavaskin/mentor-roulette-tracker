@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { MentorRouletteLogModel } from "@app/models/mentor-roulette-log.model";
+import { MentorRouletteLogModel } from "@app/models/entity/mentor-roulette-log.model";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs";
 

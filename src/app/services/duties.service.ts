@@ -1,4 +1,4 @@
-import { DutyModel } from "@app/models/duty.model";
+import { DutyModel } from "@app/models/entity/duty.model";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { inject } from "@angular/core";
