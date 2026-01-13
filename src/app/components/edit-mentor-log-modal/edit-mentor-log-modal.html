@@ -23,6 +23,15 @@
 				<label for="notes">Notes</label>
 			</p-floatLabel>
 
+			<div class="flex items-center">
+				<p-checkbox
+					inputId="logCompleted"
+					name="completed"
+					[(ngModel)]="log.completed"
+					binary="true" />
+				<label for="logCompleted" class="ml-2"> Completed </label>
+			</div>
+
 		</div>
 
 		<div class="mt-4 flex justify-end gap-4">

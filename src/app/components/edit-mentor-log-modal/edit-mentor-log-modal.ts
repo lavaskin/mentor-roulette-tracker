@@ -10,6 +10,7 @@ import { DutiesAutocomplete } from '../duties-autocomplete/duties-autocomplete';
 import { TextareaModule } from 'primeng/textarea';
 import { FormsModule } from '@angular/forms';
 import { FloatLabel } from 'primeng/floatlabel';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
 	selector: 'mrt-edit-mentor-log-modal',
@@ -23,6 +24,7 @@ import { FloatLabel } from 'primeng/floatlabel';
 		JobsAutocomplete,
 		FloatLabel,
 		TextareaModule,
+		CheckboxModule,
 	],
 	templateUrl: './edit-mentor-log-modal.html',
 	styleUrl: './edit-mentor-log-modal.scss',

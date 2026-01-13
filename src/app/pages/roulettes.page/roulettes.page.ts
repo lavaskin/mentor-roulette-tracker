@@ -40,6 +40,7 @@ export class RoulettesPage {
             { field: 'sortOrder', header: 'Sort Order' },
             { field: 'duty.name', header: 'Duty Name' },
 			{ field: 'playedJobLabel', header: 'Job' },
+			{ field: 'completed', header: 'Completed' },
             { field: 'notes', header: 'Notes' },
         ];
 	}
@@ -58,7 +59,9 @@ export class RoulettesPage {
 	}
 
 	public openCreateModal(): void {
-		this.selectedLog.set({});
+		this.selectedLog.set({
+			completed: true,
+		});
 
 		this.isNewLog.set(true);
 		this.showEditModal.set(true);
