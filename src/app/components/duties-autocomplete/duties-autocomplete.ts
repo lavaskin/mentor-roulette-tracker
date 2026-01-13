@@ -35,10 +35,8 @@ export class DutiesAutocomplete {
 	}
 
 	public filterDuties(event: any): void {
-		this.filteredOptions.set([]);
-
 		this._dutiesService.getResultItems({
-			query: event.query,
+			query: event.query || '',
 			pageSize: 10,
 		}).subscribe({
 			next: (results) => {
