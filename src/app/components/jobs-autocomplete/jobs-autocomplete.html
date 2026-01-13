@@ -1,0 +1,7 @@
+<p-autocomplete
+	[(ngModel)]="ngModel"
+	(ngModelChange)="onModelChange($event)"
+	[suggestions]="filteredOptions"
+	(completeMethod)="filterJobs($event)"
+	dropdown="true"
+	placeholder="Select a job" />
