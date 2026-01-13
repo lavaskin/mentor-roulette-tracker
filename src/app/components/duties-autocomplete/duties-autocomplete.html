@@ -1,9 +1,29 @@
 <p-autocomplete
-	[(ngModel)]="ngModel"
+	[(ngModel)]="selectedDutyId"
 	(ngModelChange)="onModelChange($event)"
 	[suggestions]="filteredOptions"
 	(completeMethod)="filterDuties($event)"
 	dropdown="true"
 	virtualScroll="true"
 	virtualScrollItemSize="34"
-	placeholder="Select a duty" />
+	placeholder="Select a duty">
+
+	<ng-template #footer>
+		<div class="pt-1">
+			<p-button
+				(click)="openNewDutyModal()"
+				class="mx-auto"
+				label="Add New Duty"
+				fluid
+				severity="secondary"
+				text
+				size="small"
+				icon="pi pi-plus" />
+		</div>
+	</ng-template>
+</p-autocomplete>
+
+<mrt-edit-duty-modal
+	[(visible)]="isEditModalVisible"
+	[isNew]="true"
+	[duty]="newDuty" />

@@ -11,14 +11,14 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 	styleUrl: './jobs-autocomplete.scss',
 })
 export class JobsAutocomplete {
-	@Input() ngModel?: number;
-	@Output() ngModelChange: EventEmitter<number> = new EventEmitter<number>();
+	@Input() selectedJobId?: number;
+	@Output() selectedJobIdChange: EventEmitter<number> = new EventEmitter<number>();
 
 	public jobOptions = JobSelectOptions;
 	public filteredOptions: SelectOptionModel[] = [];
 
 	public onModelChange(value?: number): void {
-		this.ngModelChange.emit(value);
+		this.selectedJobIdChange.emit(value);
 	}
 
 	public filterJobs(event: any): void {

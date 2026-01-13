@@ -3,10 +3,18 @@ import { FormsModule } from '@angular/forms';
 import { DutiesService } from '@app/services/duties.service';
 import { ListResultItemModel } from '@app/models/list-result-item.model';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { ButtonModule } from 'primeng/button';
+import { EditDutyModal } from "../edit-duty-modal/edit-duty-modal";
+import { DutyModel } from '@app/models/entity/duty.model';
 
 @Component({
 	selector: 'mrt-duties-autocomplete',
-	imports: [FormsModule, AutoCompleteModule],
+	imports: [
+		FormsModule,
+		AutoCompleteModule,
+		ButtonModule,
+		EditDutyModal,
+	],
 	templateUrl: './duties-autocomplete.html',
 	styleUrl: './duties-autocomplete.scss',
 	providers: [DutiesService]
@@ -14,13 +22,16 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 export class DutiesAutocomplete {
 	private _dutiesService: DutiesService = inject(DutiesService);
 
-	@Input() ngModel?: number;
-	@Output() ngModelChange: EventEmitter<number> = new EventEmitter<number>();
+	@Input() selectedDutyId?: number;
+	@Output() selectedDutyIdChange: EventEmitter<number> = new EventEmitter<number>();
 
 	public filteredOptions: ListResultItemModel[] = [];
 
+	public isEditModalVisible: boolean = false;
+	public newDuty: DutyModel | null = null;
+
 	public onModelChange(value?: number): void {
-		this.ngModelChange.emit(value);
+		this.selectedDutyIdChange.emit(value);
 	}
 
 	public filterDuties(event: any): void {
@@ -34,5 +45,12 @@ export class DutiesAutocomplete {
 				this.filteredOptions = results;
 			},
 		});
+	}
+
+	public openNewDutyModal(): void {
+		this.newDuty = {
+			name: '',
+		};
+		this.isEditModalVisible = true;
 	}
 }

@@ -1,9 +1,8 @@
 <p-autocomplete
-	[(ngModel)]="ngModel"
+	[(ngModel)]="selectedJobId"
 	(ngModelChange)="onModelChange($event)"
 	[suggestions]="filteredOptions"
 	(completeMethod)="filterJobs($event)"
 	dropdown="true"
 	virtualScroll="true"
-	virtualScrollItemSize="34"
 	placeholder="Select a job" />

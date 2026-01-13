@@ -7,16 +7,22 @@ import { SelectModule } from 'primeng/select';
 import { JobSelectOptions } from '@app/data/select-options.data';
 import { JobsAutocomplete } from '../jobs-autocomplete/jobs-autocomplete';
 import { DutiesAutocomplete } from '../duties-autocomplete/duties-autocomplete';
+import { TextareaModule } from 'primeng/textarea';
+import { FormsModule } from '@angular/forms';
+import { FloatLabel } from 'primeng/floatlabel';
 
 @Component({
 	selector: 'mrt-edit-mentor-log-modal',
 	imports: [
+		FormsModule,
 		DialogModule,
 		InputTextModule,
 		ButtonModule,
 		SelectModule,
 		DutiesAutocomplete,
 		JobsAutocomplete,
+		FloatLabel,
+		TextareaModule,
 	],
 	templateUrl: './edit-mentor-log-modal.html',
 	styleUrl: './edit-mentor-log-modal.scss',

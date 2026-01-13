@@ -2,17 +2,24 @@
 	modal="true"
 	[(visible)]="visible"
 	(visibleChange)="visibleChange.emit($event)"
-	[header]="isNew ? 'Add New Log' : 'Edit Log'"
-	[style]="{width: '350px'}">
+	[header]="isNew ? 'Add New Log' : 'Edit Log'">
 
 	@if (log != null) {
 		<div class="flex flex-col gap-4" style="height: 350px">
 			
 			<mrt-duties-autocomplete
-				[(ngModel)]="log.dutyId" />
+				[(selectedDutyId)]="log.dutyId" />
 
 			<mrt-jobs-autocomplete
-				[(ngModel)]="log.playedJobId" />
+				[(selectedJobId)]="log.playedJobId" />
+			
+			<p-floatLabel variant="in">
+				<textarea
+					[(ngModel)]="log.notes"
+					id="notes"
+					pTextarea></textarea>
+				<label for="notes">Notes</label>
+			</p-floatLabel>
 
 		</div>
 
