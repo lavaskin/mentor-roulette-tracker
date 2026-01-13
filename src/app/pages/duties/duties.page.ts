@@ -15,7 +15,7 @@ import { ConfirmModal } from "@app/components/confirm-modal/confirm-modal";
 	providers: [DutiesService],
 })
 export class DutiesPage implements OnInit {
-	private _dutiesService: DutiesService = inject(DutiesService);
+	private _data: DutiesService = inject(DutiesService);
 
 	public isLoading = signal(false);
 	public duties = signal<DutyModel[]>([]);
@@ -45,7 +45,7 @@ export class DutiesPage implements OnInit {
 
 	public reload(): void {
 		this.isLoading.set(true);
-		this._dutiesService.getDuties().subscribe({
+		this._data.getAll().subscribe({
 			next: (duties: DutyModel[]) => {
 				this.duties.set(duties);
 			},
@@ -78,9 +78,9 @@ export class DutiesPage implements OnInit {
 
 		let httpObserver;
 		if (this.isNewDuty()) {
-			httpObserver = this._dutiesService.createDuty(duty);
+			httpObserver = this._data.create(duty);
 		} else {
-			httpObserver = this._dutiesService.updateDuty(duty);
+			httpObserver = this._data.update(duty);
 		}
 
 		httpObserver.subscribe({
@@ -98,7 +98,7 @@ export class DutiesPage implements OnInit {
 	public deleteDuty(dutyId: number | null | undefined): void {
 		if (!dutyId || this.isLoadingDelete()) return;
 
-		this._dutiesService.deleteDuty(dutyId).subscribe({
+		this._data.delete(dutyId).subscribe({
 			next: () => {
 				this.reload();
 			},
