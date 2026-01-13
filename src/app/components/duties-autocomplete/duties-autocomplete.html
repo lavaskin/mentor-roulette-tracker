@@ -1,0 +1,9 @@
+<p-autocomplete
+	[(ngModel)]="ngModel"
+	(ngModelChange)="onModelChange($event)"
+	[suggestions]="filteredOptions"
+	(completeMethod)="filterDuties($event)"
+	dropdown="true"
+	virtualScroll="true"
+	virtualScrollItemSize="34"
+	placeholder="Select a duty" />
