@@ -4,16 +4,15 @@ import { DutiesService } from '@app/services/duties.service';
 import { ListResultItemModel } from '@app/models/list-result-item.model';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
-import { EditDutyModal } from "../edit-duty-modal/edit-duty-modal";
-import { DutyModel } from '@app/models/entity/duty.model';
+import { RouterModule } from '@angular/router';
 
 @Component({
 	selector: 'mrt-duties-autocomplete',
 	imports: [
 		FormsModule,
+		RouterModule,
 		AutoCompleteModule,
 		ButtonModule,
-		EditDutyModal,
 	],
 	templateUrl: './duties-autocomplete.html',
 	styleUrl: './duties-autocomplete.scss',
@@ -26,9 +25,6 @@ export class DutiesAutocomplete {
 	@Output() selectedDutyIdChange: EventEmitter<number> = new EventEmitter<number>();
 
 	public filteredOptions = signal<ListResultItemModel[]>([]);
-
-	public isEditModalVisible: boolean = false;
-	public newDuty: DutyModel | null = null;
 
 	public onModelChange(value?: number): void {
 		this.selectedDutyIdChange.emit(value);
@@ -43,12 +39,5 @@ export class DutiesAutocomplete {
 				this.filteredOptions.set(results);
 			},
 		});
-	}
-
-	public openNewDutyModal(): void {
-		this.newDuty = {
-			name: '',
-		};
-		this.isEditModalVisible = true;
 	}
 }
