@@ -1,11 +1,11 @@
 <p-autocomplete
 	[(ngModel)]="selectedDutyId"
 	(ngModelChange)="onModelChange($event)"
-	[suggestions]="filteredOptions"
+	[suggestions]="filteredOptions()"
 	(completeMethod)="filterDuties($event)"
 	dropdown="true"
 	virtualScroll="true"
-	virtualScrollItemSize="34"
+	virtualScroll="40"
 	placeholder="Select a duty">
 
 	<ng-template #footer>

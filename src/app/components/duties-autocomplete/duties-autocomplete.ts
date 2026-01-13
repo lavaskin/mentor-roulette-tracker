@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DutiesService } from '@app/services/duties.service';
 import { ListResultItemModel } from '@app/models/list-result-item.model';
@@ -25,7 +25,7 @@ export class DutiesAutocomplete {
 	@Input() selectedDutyId?: number;
 	@Output() selectedDutyIdChange: EventEmitter<number> = new EventEmitter<number>();
 
-	public filteredOptions: ListResultItemModel[] = [];
+	public filteredOptions = signal<ListResultItemModel[]>([]);
 
 	public isEditModalVisible: boolean = false;
 	public newDuty: DutyModel | null = null;
@@ -35,14 +35,14 @@ export class DutiesAutocomplete {
 	}
 
 	public filterDuties(event: any): void {
-		this.filteredOptions = [];
+		this.filteredOptions.set([]);
 
 		this._dutiesService.getResultItems({
 			query: event.query,
 			pageSize: 10,
 		}).subscribe({
 			next: (results) => {
-				this.filteredOptions = results;
+				this.filteredOptions.set(results);
 			},
 		});
 	}
