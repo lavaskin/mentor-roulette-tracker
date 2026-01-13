@@ -12,4 +12,16 @@ export class DutiesService {
 	public getDuties(): Observable<DutyModel[]> {
 		return this._http.get<DutyModel[]>(`${this._baseUrl}`);
 	}
+
+	public getDutyById(dutyId: number): Observable<DutyModel> {
+		return this._http.get<DutyModel>(`${this._baseUrl}/${dutyId}`);
+	}
+
+	public createDuty(duty: DutyModel): Observable<DutyModel> {
+		return this._http.post<DutyModel>(`${this._baseUrl}`, duty);
+	}
+
+	public deleteDuty(dutyId: number): Observable<void> {
+		return this._http.delete<void>(`${this._baseUrl}/${dutyId}`);
+	}
 }
