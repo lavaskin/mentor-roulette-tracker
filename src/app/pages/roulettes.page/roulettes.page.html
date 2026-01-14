@@ -37,7 +37,15 @@
 	<ng-template #body let-rowData let-columns="columns">
 		<tr>
 			@for (col of columns; track col) {
-				<td>{{ getNestedProperty(rowData, col.field) }}</td>
+				<td>
+					@if (col.field === 'completed') {
+						<i [class]="getNestedProperty(rowData, col.field)
+							? 'pi pi-check text-green-600'
+							: 'pi pi-times text-red-600'"></i>
+					} @else {
+						{{ getNestedProperty(rowData, col.field) }}
+					}
+				</td>
 			}
 
 			<!-- Actions -->
