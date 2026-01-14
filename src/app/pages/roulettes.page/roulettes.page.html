@@ -37,7 +37,7 @@
 	<ng-template #body let-rowData let-columns="columns">
 		<tr>
 			@for (col of columns; track col) {
-				<td>{{ rowData[col.field] }}</td>
+				<td>{{ getNestedProperty(rowData, col.field) }}</td>
 			}
 
 			<!-- Actions -->

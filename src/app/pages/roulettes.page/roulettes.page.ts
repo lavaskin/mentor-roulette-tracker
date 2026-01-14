@@ -40,9 +40,10 @@ export class RoulettesPage {
 
 	constructor() {
 		this.cols = [
-            { field: 'sortOrder', header: 'Sort Order' },
-            { field: 'duty.name', header: 'Duty Name' },
+            { field: 'sortOrder', header: 'Number' },
 			{ field: 'playedJobLabel', header: 'Job' },
+            { field: 'dutyModel.name', header: 'Duty Name' },
+            { field: 'dutyModel.dutyTypeLabel', header: 'Duty Type' },
 			{ field: 'completed', header: 'Completed' },
             { field: 'notes', header: 'Notes' },
         ];
@@ -115,9 +116,13 @@ export class RoulettesPage {
 		const query = this.searchQuery().toLowerCase().trim();
 		return this.logs().filter(log =>
 			log.playedJobLabel?.toLowerCase().includes(query) ||
-			(log.duty?.name?.toLowerCase().includes(query) ?? false) ||
-			(log.duty?.dutyTypeLabel?.toLowerCase().includes(query) ?? false) ||
+			(log.dutyModel?.name?.toLowerCase().includes(query) ?? false) ||
+			(log.dutyModel?.dutyTypeLabel?.toLowerCase().includes(query) ?? false) ||
 			(log.notes?.toLowerCase().includes(query) ?? false)
 		);
+	}
+
+	public getNestedProperty(obj: any, path: string): any {
+		return path.split('.').reduce((prev, curr) => prev?.[curr], obj);
 	}
 }

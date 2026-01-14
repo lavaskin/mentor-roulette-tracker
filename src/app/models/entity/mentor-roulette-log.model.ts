@@ -4,7 +4,7 @@ import { DutyModel } from "./duty.model";
 export interface MentorRouletteLogModel {
 	mentorRouletteLogId?: number,
 	dutyId?: number,
-	duty?: DutyModel,
+	dutyModel?: DutyModel,
 	sortOrder?: number,
 	playedJobId?: number,
 	completed?: boolean,
