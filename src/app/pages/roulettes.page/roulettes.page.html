@@ -42,6 +42,10 @@
 						<i [class]="getNestedProperty(rowData, col.field)
 							? 'pi pi-check text-green-600'
 							: 'pi pi-times text-red-600'"></i>
+					} @else if (col.field === 'replacement') {
+						<i [class]="getNestedProperty(rowData, col.field)
+							? 'pi pi-check text-green-600'
+							: 'pi pi-times text-red-600'"></i>
 					} @else {
 						{{ getNestedProperty(rowData, col.field) }}
 					}

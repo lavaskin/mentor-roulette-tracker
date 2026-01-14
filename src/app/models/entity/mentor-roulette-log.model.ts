@@ -8,6 +8,7 @@ export interface MentorRouletteLogModel {
 	sortOrder?: number,
 	playedJobId?: number,
 	completed?: boolean,
+	replacement?: boolean,
 	notes?: string,
 	datePlayed?: string,
 	playedJob?: JobEnum,

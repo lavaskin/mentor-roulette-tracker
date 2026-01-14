@@ -45,6 +45,7 @@ export class RoulettesPage {
             { field: 'dutyModel.name', header: 'Duty Name' },
             { field: 'dutyModel.dutyTypeLabel', header: 'Duty Type' },
 			{ field: 'completed', header: 'Completed' },
+			{ field: 'replacement', header: 'Replacement' },
             { field: 'notes', header: 'Notes' },
         ];
 	}
@@ -65,6 +66,7 @@ export class RoulettesPage {
 	public openCreateModal(): void {
 		this.selectedLog.set({
 			completed: true,
+			replacement: false,
 		});
 
 		this.isNewLog.set(true);
