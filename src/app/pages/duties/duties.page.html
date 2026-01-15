@@ -2,6 +2,10 @@
 	<h1 class="mr-auto text-2xl font-bold">Duties</h1>
 
 	<!-- Page Actions -->
+	 @if (duties().length > filteredDuties.length) {
+		<p class="text-lg italic">{{ filteredDuties.length }} filtered results</p>
+	}
+
 	<mrt-search-bar
 		[(ngModel)]="searchQuery"
 		placeholder="Search Duties..." />
