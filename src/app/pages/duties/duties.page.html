@@ -4,6 +4,8 @@
 	<!-- Page Actions -->
 	 @if (duties().length > filteredDuties.length) {
 		<p class="text-lg italic">{{ filteredDuties.length }} filtered results</p>
+	} @else {
+		<p class="text-lg">{{ filteredDuties.length }} Registered Duties</p>
 	}
 
 	<mrt-search-bar
