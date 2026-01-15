@@ -2,6 +2,10 @@
 	<h1 class="mr-auto text-2xl font-bold">Roulettes</h1>
 
 	<!-- Page Actions -->
+	@if (logs().length > filteredLogs.length) {
+		<p class="text-lg italic">{{ filteredLogs.length }} filtered results</p>
+	}
+	
 	<mrt-search-bar
 		[(ngModel)]="searchQuery"
 		placeholder="Search Logs..." />
