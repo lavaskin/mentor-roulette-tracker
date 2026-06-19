@@ -7,6 +7,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { EditDutyModal } from "@app/components/edit-duty-modal/edit-duty-modal";
 import { ConfirmModal } from "@app/components/confirm-modal/confirm-modal";
 import { SearchBar } from '@app/components/search-bar/search-bar';
+import { ToastService } from '@app/services/toast.service';
 
 @Component({
 	selector: 'mrt-page-duties',
@@ -24,6 +25,7 @@ import { SearchBar } from '@app/components/search-bar/search-bar';
 })
 export class DutiesPage implements OnInit {
 	private _data: DutiesService = inject(DutiesService);
+	private _toast: ToastService = inject(ToastService);
 
 	public isLoading = signal(false);
 	public duties = signal<DutyModel[]>([]);
@@ -59,6 +61,9 @@ export class DutiesPage implements OnInit {
 			next: (duties: DutyModel[]) => {
 				this.duties.set(duties);
 			},
+			error: (error) => {
+				this._toast.showApiError('Failed to load duties', error, 'Unable to load duties.');
+			},
 		}).add(() => this.isLoading.set(false));
 	}
 
@@ -79,8 +84,6 @@ export class DutiesPage implements OnInit {
 
 	public onDutySaved(duty: DutyModel): void {
 		if (this.isLoadingSave()) return;
-
-		this.showEditDutyModal.set(false);
 		this.isLoadingSave.set(true);
 
 		let httpObserver;
@@ -92,7 +95,15 @@ export class DutiesPage implements OnInit {
 
 		httpObserver.subscribe({
 			next: () => {
+				this.showEditDutyModal.set(false);
 				this.reload();
+			},
+			error: (error) => {
+				this._toast.showApiError(
+					this.isNewDuty() ? 'Failed to create duty' : 'Failed to update duty',
+					error,
+					'Unable to save the duty.'
+				);
 			},
 		}).add(() => this.isLoadingSave.set(false));
 	}
@@ -105,9 +116,14 @@ export class DutiesPage implements OnInit {
 	public deleteDuty(dutyId: number | null | undefined): void {
 		if (!dutyId || this.isLoadingDelete()) return;
 
+		this.isLoadingDelete.set(true);
+
 		this._data.delete(dutyId).subscribe({
 			next: () => {
 				this.reload();
+			},
+			error: (error) => {
+				this._toast.showApiError('Failed to delete duty', error, 'Unable to delete the duty.');
 			},
 		}).add(() => this.isLoadingDelete.set(false));
 	}

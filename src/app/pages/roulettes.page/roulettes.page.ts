@@ -4,6 +4,7 @@ import { EditMentorLogModal } from '@app/components/edit-mentor-log-modal/edit-m
 import { SearchBar } from '@app/components/search-bar/search-bar';
 import { MentorRouletteLogModel } from '@app/models/entity/mentor-roulette-log.model';
 import { MentorRouletteLogService } from '@app/services/mentor-roulette-log.service';
+import { ToastService } from '@app/services/toast.service';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
@@ -22,6 +23,7 @@ import { TableModule } from 'primeng/table';
 })
 export class RoulettesPage {
 	private _data: MentorRouletteLogService = inject(MentorRouletteLogService);
+	private _toast: ToastService = inject(ToastService);
 
 	public isLoading = signal(false);
 	public logs = signal<MentorRouletteLogModel[]>([]);
@@ -60,6 +62,9 @@ export class RoulettesPage {
 			next: (logs: MentorRouletteLogModel[]) => {
 				this.logs.set(logs);
 			},
+			error: (error) => {
+				this._toast.showApiError('Failed to load roulette logs', error, 'Unable to load roulette logs.');
+			},
 		}).add(() => this.isLoading.set(false));
 	}
 
@@ -81,8 +86,6 @@ export class RoulettesPage {
 
 	public onLogSaved(log: MentorRouletteLogModel): void {
 		if (this.isLoadingSave()) return;
-
-		this.showEditModal.set(false);
 		this.isLoadingSave.set(true);
 
 		let httpObserver;
@@ -94,7 +97,15 @@ export class RoulettesPage {
 
 		httpObserver.subscribe({
 			next: () => {
+				this.showEditModal.set(false);
 				this.reload();
+			},
+			error: (error) => {
+				this._toast.showApiError(
+					this.isNewLog() ? 'Failed to create roulette log' : 'Failed to update roulette log',
+					error,
+					'Unable to save the roulette log.'
+				);
 			},
 		}).add(() => this.isLoadingSave.set(false));
 	}
@@ -107,9 +118,14 @@ export class RoulettesPage {
 	public deleteLog(logId: number | null | undefined): void {
 		if (!logId || this.isLoadingDelete()) return;
 
+		this.isLoadingDelete.set(true);
+
 		this._data.delete(logId).subscribe({
 			next: () => {
 				this.reload();
+			},
+			error: (error) => {
+				this._toast.showApiError('Failed to delete roulette log', error, 'Unable to delete the roulette log.');
 			},
 		}).add(() => this.isLoadingDelete.set(false));
 	}
