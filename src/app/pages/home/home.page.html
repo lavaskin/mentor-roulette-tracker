@@ -1,1 +1,85 @@
-<h1>Home</h1>
+<section class="rounded-[1.5rem] bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.24),transparent_35%),linear-gradient(135deg,#102542_0%,#1f3a5f_55%,#2b5c84_100%)] px-5 py-5 text-slate-50 shadow-[0_24px_60px_rgba(16,37,66,0.2)] sm:p-8">
+	<div>
+		<p class="mb-3 text-[0.85rem] font-bold uppercase tracking-[0.14em] text-amber-200">Mentor Roulette Tracker</p>
+		<h1 class="m-0 text-[clamp(2rem,4vw,3.5rem)] font-extrabold leading-none">Run history at a glance</h1>
+		<p class="mt-4 max-w-[42rem] text-[1.05rem] leading-7 text-slate-50/85">
+			A quick summary of completions, failure rate, and the duties you see most often.
+		</p>
+	</div>
+</section>
+
+@if (isLoading()) {
+	<section class="mt-6 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
+		@for (card of [1, 2, 3, 4, 5, 6]; track card) {
+			<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+				<div class="flex min-h-full flex-col gap-3.5">
+					<p-skeleton width="7rem" height="0.85rem"></p-skeleton>
+					<p-skeleton width="5rem" height="2.75rem"></p-skeleton>
+					<p-skeleton width="10rem" height="1rem"></p-skeleton>
+				</div>
+			</p-card>
+		}
+	</section>
+} @else if (errorMessage()) {
+	<section class="mt-6">
+		<p-message severity="error" styleClass="error-message">
+			<ng-template #content>
+				<div class="flex flex-col gap-2">
+					<h2 class="m-0 text-[1.4rem] font-bold text-slate-950">Stats unavailable</h2>
+					<p class="m-0 text-slate-800">{{ errorMessage() }}</p>
+				</div>
+			</ng-template>
+		</p-message>
+	</section>
+} @else if (stats(); as statBlock) {
+	<section class="mt-6 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
+		<p-card styleClass="stat-card rounded-[1.25rem] border border-amber-500/25 bg-gradient-to-br from-amber-100 to-amber-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+			<div class="flex min-h-full flex-col gap-3.5">
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Total runs</p>
+				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.totalRuns }}</p>
+				<p-tag severity="contrast" [value]="statBlock.completedRoulettes + ' completed'"></p-tag>
+			</div>
+		</p-card>
+
+		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+			<div class="flex min-h-full flex-col gap-3.5">
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Achievement progress</p>
+				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.achievementProgressPercent }}%</p>
+				<p-progressbar [value]="statBlock.achievementProgressPercent" [showValue]="false"></p-progressbar>
+				<p class="m-0 text-[0.95rem] leading-6 text-slate-200">Towards 2,000 successful roulettes</p>
+			</div>
+		</p-card>
+
+		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+			<div class="flex min-h-full flex-col gap-3.5">
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Most seen duty</p>
+				<p class="m-0 text-[clamp(1.4rem,3vw,2rem)] font-extrabold leading-[1.25] text-white">{{ statBlock.mostRanDuty || 'No runs logged yet' }}</p>
+				<p-tag severity="secondary" [value]="statBlock.mostRanDutyCount + ' appearances'"></p-tag>
+			</div>
+		</p-card>
+
+		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+			<div class="flex min-h-full flex-col gap-3.5">
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Most common expansion</p>
+				<p class="m-0 text-[clamp(1.4rem,3vw,2rem)] font-extrabold leading-[1.25] text-white">{{ statBlock.mostCommonExpansion || 'No qualifying runs yet' }}</p>
+				<p-tag severity="info" value="Guildhests excluded"></p-tag>
+			</div>
+		</p-card>
+
+		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+			<div class="flex min-h-full flex-col gap-3.5">
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Failed duties</p>
+				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.totalFailedDuties }}</p>
+				<p-tag severity="danger" [value]="(statBlock.totalRuns - statBlock.totalFailedDuties) + ' non-failures recorded'"></p-tag>
+			</div>
+		</p-card>
+
+		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+			<div class="flex min-h-full flex-col gap-3.5">
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Extreme trial clear rate</p>
+				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.extremeTrialClearPercent }}%</p>
+				<p-tag severity="warn" [value]="statBlock.numberExtremeTrials + ' extreme trials logged'"></p-tag>
+			</div>
+		</p-card>
+	</section>
+}

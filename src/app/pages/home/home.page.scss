@@ -1,0 +1,50 @@
+:host ::ng-deep .stat-card {
+	height: 100%;
+}
+
+:host ::ng-deep .stat-card .p-card-body {
+	padding: 1.5rem;
+	height: 100%;
+}
+
+:host ::ng-deep .stat-card .p-card-content {
+	padding: 0;
+}
+
+:host ::ng-deep .stat-card .p-progressbar {
+	height: 0.75rem;
+	border-radius: 999px;
+	background: rgba(148, 163, 184, 0.24);
+}
+
+	:host ::ng-deep .error-message {
+	width: 100%;
+}
+
+:host ::ng-deep .error-message .p-message {
+	align-items: flex-start;
+	border-radius: 1.25rem;
+	padding: 1.25rem 1.5rem;
+}
+
+:host ::ng-deep .error-message .p-message-content {
+	align-items: flex-start;
+}
+
+:host ::ng-deep .error-message .p-message-text {
+	width: 100%;
+}
+
+:host ::ng-deep .stat-card .p-tag {
+	width: fit-content;
+}
+
+@media (max-width: 640px) {
+	:host ::ng-deep .stat-card .p-card-body {
+		padding: 1.25rem;
+	}
+
+	:host ::ng-deep .error-message .p-message {
+		padding: 1.25rem;
+	}
+}

@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject } from "@angular/core";
+import { MentorRouletteStatsModel } from "@app/models/mentor-roulette-stats.model";
 import { MentorRouletteLogModel } from "@app/models/entity/mentor-roulette-log.model";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs";
@@ -15,6 +16,10 @@ export class MentorRouletteLogService {
 
 	public getById(mentorRouletteLogId: number): Observable<MentorRouletteLogModel> {
 		return this._http.get<MentorRouletteLogModel>(`${this._baseUrl}/${mentorRouletteLogId}`);
+	}
+
+	public getStats(): Observable<MentorRouletteStatsModel> {
+		return this._http.get<MentorRouletteStatsModel>(`${this._baseUrl}/GetStats`);
 	}
 
 	public create(mentorRouletteLog: MentorRouletteLogModel): Observable<MentorRouletteLogModel> {
