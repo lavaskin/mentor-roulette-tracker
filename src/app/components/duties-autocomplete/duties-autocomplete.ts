@@ -44,7 +44,7 @@ export class DutiesAutocomplete extends AutocompleteSelectionBase<ListResultItem
 
 	public filteredOptions = signal<ListResultItemModel[]>([]);
 
-	public onModelChange(value?: ListResultItemModel): void {
+	public onOptionSelected(value?: ListResultItemModel): void {
 		this.selectedDutyIdChange.emit(this.handleModelChange(value));
 	}
 

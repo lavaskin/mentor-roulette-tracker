@@ -36,7 +36,7 @@ export class JobsAutocomplete extends AutocompleteSelectionBase<SelectOptionMode
 	public jobOptions = JobSelectOptions;
 	public filteredOptions: SelectOptionModel[] = [];
 
-	public onModelChange(value?: SelectOptionModel): void {
+	public onOptionSelected(value?: SelectOptionModel): void {
 		this.selectedJobIdChange.emit(this.handleModelChange(value));
 	}
 

@@ -1,10 +1,11 @@
 <p-autocomplete
 	[(ngModel)]="selectedOption"
-	(ngModelChange)="onModelChange($event)"
 	[suggestions]="filteredOptions()"
 	(completeMethod)="filterDuties($event)"
+	(onSelect)="onOptionSelected($event.value)"
 	optionLabel="label"
 	dropdown="true"
+	[forceSelection]="true"
 	scrollHeight="250px"
 	placeholder="Select a duty">
 
