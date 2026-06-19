@@ -10,8 +10,8 @@
 
 @if (isLoading()) {
 	<section class="mt-6 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
-		@for (card of [1, 2, 3, 4, 5, 6]; track card) {
-			<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		@for (card of [1, 2, 3, 4, 5, 6, 7]; track card) {
+			<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 				<div class="flex min-h-full flex-col gap-3.5">
 					<p-skeleton width="7rem" height="0.85rem"></p-skeleton>
 					<p-skeleton width="5rem" height="2.75rem"></p-skeleton>
@@ -22,7 +22,7 @@
 	</section>
 } @else if (errorMessage()) {
 	<section class="mt-6">
-		<p-message severity="error" styleClass="error-message">
+		<p-message severity="error" class="error-message">
 			<ng-template #content>
 				<div class="flex flex-col gap-2">
 					<h2 class="m-0 text-[1.4rem] font-bold text-slate-950">Stats unavailable</h2>
@@ -33,7 +33,7 @@
 	</section>
 } @else if (stats(); as statBlock) {
 	<section class="mt-6 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
-		<p-card styleClass="stat-card rounded-[1.25rem] border border-amber-500/25 bg-gradient-to-br from-amber-100 to-amber-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<p-card class="stat-card rounded-[1.25rem] border border-amber-500/25 bg-gradient-to-br from-amber-100 to-amber-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Total runs</p>
 				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.totalRuns }}</p>
@@ -41,7 +41,7 @@
 			</div>
 		</p-card>
 
-		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Achievement progress</p>
 				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.achievementProgressPercent }}%</p>
@@ -50,15 +50,25 @@
 			</div>
 		</p-card>
 
-		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 			<div class="flex min-h-full flex-col gap-3.5">
-				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Most seen duty</p>
-				<p class="m-0 text-[clamp(1.4rem,3vw,2rem)] font-extrabold leading-[1.25] text-white">{{ statBlock.mostRanDuty || 'No runs logged yet' }}</p>
-				<p-tag severity="secondary" [value]="statBlock.mostRanDutyCount + ' appearances'"></p-tag>
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Top seen duties</p>
+				@if (statBlock.topSeenDuties.length > 0) {
+					<div class="flex flex-col gap-2">
+						@for (duty of statBlock.topSeenDuties; track duty.dutyName) {
+							<div class="flex items-center justify-between gap-3 rounded-lg bg-white/8 px-3 py-2">
+								<span class="text-sm font-semibold text-white">{{ duty.dutyName }}</span>
+								<p-tag severity="secondary" [value]="duty.count + ' runs'"></p-tag>
+							</div>
+						}
+					</div>
+				} @else {
+					<p class="m-0 text-[0.95rem] leading-6 text-slate-200">No duty history recorded yet.</p>
+				}
 			</div>
 		</p-card>
 
-		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Most common expansion</p>
 				<p class="m-0 text-[clamp(1.4rem,3vw,2rem)] font-extrabold leading-[1.25] text-white">{{ statBlock.mostCommonExpansion || 'No qualifying runs yet' }}</p>
@@ -66,19 +76,36 @@
 			</div>
 		</p-card>
 
-		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 			<div class="flex min-h-full flex-col gap-3.5">
-				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Failed duties</p>
-				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.totalFailedDuties }}</p>
-				<p-tag severity="danger" [value]="(statBlock.totalRuns - statBlock.totalFailedDuties) + ' non-failures recorded'"></p-tag>
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Top played jobs</p>
+				@if (statBlock.topPlayedJobs.length > 0) {
+					<div class="flex flex-col gap-2">
+						@for (job of statBlock.topPlayedJobs; track job.jobLabel) {
+							<div class="flex items-center justify-between gap-3 rounded-lg bg-white/8 px-3 py-2">
+								<span class="text-sm font-semibold text-white">{{ job.jobLabel }}</span>
+								<p-tag severity="secondary" [value]="job.count + ' runs'"></p-tag>
+							</div>
+						}
+					</div>
+				} @else {
+					<p class="m-0 text-[0.95rem] leading-6 text-slate-200">No job history recorded yet.</p>
+				}
 			</div>
 		</p-card>
 
-		<p-card styleClass="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Extreme trial clear rate</p>
 				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.extremeTrialClearPercent }}%</p>
 				<p-tag severity="warn" [value]="statBlock.numberExtremeTrials + ' extreme trials logged'"></p-tag>
+			</div>
+		</p-card>
+
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+			<div class="flex min-h-full flex-col gap-3.5">
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Failed duties</p>
+				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.totalFailedDuties }}</p>
 			</div>
 		</p-card>
 	</section>
