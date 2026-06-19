@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ConfirmModal } from '@app/components/confirm-modal/confirm-modal';
 import { EditMentorLogModal } from '@app/components/edit-mentor-log-modal/edit-mentor-log-modal';
@@ -11,6 +12,7 @@ import { TableModule } from 'primeng/table';
 @Component({
 	selector: 'mrt-page-roulettes',
 	imports: [
+		DatePipe,
 		ConfirmModal,
 		TableModule,
 		ButtonModule,
@@ -49,6 +51,7 @@ export class RoulettesPage {
 			{ field: 'completed', header: 'Completed' },
 			{ field: 'replacement', header: 'Replacement' },
             { field: 'notes', header: 'Notes' },
+			{ field: 'datePlayed', header: 'Date Ran' },
         ];
 	}
 
