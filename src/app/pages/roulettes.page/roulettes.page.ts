@@ -125,6 +125,8 @@ export class RoulettesPage {
 
 		this._data.delete(logId).subscribe({
 			next: () => {
+				this.showDeleteConfirmModal.set(false);
+				this.toDeleteId.set(null);
 				this.reload();
 			},
 			error: (error) => {

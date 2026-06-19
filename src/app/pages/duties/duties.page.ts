@@ -44,7 +44,8 @@ export class DutiesPage implements OnInit {
 
 	constructor() {
 		this.cols = [
-            { field: 'name', header: 'Name' },
+            { field: 'dutyId', header: 'ID' },
+			{ field: 'name', header: 'Name' },
             { field: 'levelRequirement', header: 'Level' },
             { field: 'expansionLabel', header: 'Expansion' },
             { field: 'dutyTypeLabel', header: 'Type' },
@@ -120,6 +121,8 @@ export class DutiesPage implements OnInit {
 
 		this._data.delete(dutyId).subscribe({
 			next: () => {
+				this.showDeleteConfirmModal.set(false);
+				this.dutyToDeleteId.set(null);
 				this.reload();
 			},
 			error: (error) => {

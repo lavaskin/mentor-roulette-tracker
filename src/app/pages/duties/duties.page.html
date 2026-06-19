@@ -72,4 +72,5 @@
 <!-- Confirm Delete Modal -->
 <mrt-confirm-modal
 	[(visible)]="showDeleteConfirmModal"
+	[isLoading]="isLoadingDelete()"
 	(confirm)="deleteDuty(dutyToDeleteId())" />

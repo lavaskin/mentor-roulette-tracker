@@ -84,4 +84,5 @@
 <!-- Confirm Delete Modal -->
 <mrt-confirm-modal
 	[(visible)]="showDeleteConfirmModal"
+	[isLoading]="isLoadingDelete()"
 	(confirm)="deleteLog(toDeleteId())" />
