@@ -1,8 +1,9 @@
 <p-autocomplete
-	[(ngModel)]="selectedDutyId"
+	[(ngModel)]="selectedDuty"
 	(ngModelChange)="onModelChange($event)"
 	[suggestions]="filteredOptions()"
 	(completeMethod)="filterDuties($event)"
+	optionLabel="label"
 	dropdown="true"
 	scrollHeight="250px"
 	placeholder="Select a duty">

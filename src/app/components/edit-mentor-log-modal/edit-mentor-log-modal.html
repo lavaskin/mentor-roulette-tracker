@@ -9,10 +9,12 @@
 		<div class="flex flex-col gap-4" style="height: 300px">
 			
 			<mrt-duties-autocomplete
-				[(selectedDutyId)]="log.dutyId" />
+				[(selectedDutyId)]="log.dutyId"
+				[selectedDutyLabel]="log.dutyModel?.name" />
 
 			<mrt-jobs-autocomplete
-				[(selectedJobId)]="log.playedJobId" />
+				[(selectedJobId)]="log.playedJobId"
+				[selectedJobLabel]="log.playedJobLabel" />
 			
 			<p-floatLabel variant="in" class="w-full">
 				<textarea
