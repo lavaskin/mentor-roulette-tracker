@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { JobSelectOptions } from '@app/data/select-options.data';
 import { SelectOptionModel } from '@app/models/select-option.model';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { AutocompleteSelectionBase } from '../shared/autocomplete-selection-base';
 
 @Component({
 	selector: 'mrt-jobs-autocomplete',
@@ -10,41 +11,33 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 	templateUrl: './jobs-autocomplete.html',
 	styleUrl: './jobs-autocomplete.scss',
 })
-export class JobsAutocomplete {
-	private _selectedJobId?: number;
-	private _selectedJobLabel?: string;
+export class JobsAutocomplete extends AutocompleteSelectionBase<SelectOptionModel> {
 
 	@Input()
 	public set selectedJobId(value: number | undefined) {
-		this._selectedJobId = value;
-		this.syncSelectedJob();
+		this.setSelectedId(value, (id) => this.jobOptions.find((job) => job.value === id));
 	}
 
 	public get selectedJobId(): number | undefined {
-		return this._selectedJobId;
+		return this.getSelectedId();
 	}
 
 	@Input()
 	public set selectedJobLabel(value: string | undefined) {
-		this._selectedJobLabel = value;
-		this.syncSelectedJob();
+		this.setSelectedLabel(value, (id) => this.jobOptions.find((job) => job.value === id));
 	}
 
 	public get selectedJobLabel(): string | undefined {
-		return this._selectedJobLabel;
+		return this.getSelectedLabel();
 	}
 
 	@Output() selectedJobIdChange: EventEmitter<number | undefined> = new EventEmitter<number | undefined>();
 
 	public jobOptions = JobSelectOptions;
 	public filteredOptions: SelectOptionModel[] = [];
-	public selectedJob?: SelectOptionModel;
 
 	public onModelChange(value?: SelectOptionModel): void {
-		this.selectedJob = value;
-		this._selectedJobId = value?.value;
-		this._selectedJobLabel = value?.label;
-		this.selectedJobIdChange.emit(value?.value);
+		this.selectedJobIdChange.emit(this.handleModelChange(value));
 	}
 
 	public filterJobs(event: any): void {
@@ -52,17 +45,5 @@ export class JobsAutocomplete {
 		this.filteredOptions = JobSelectOptions.filter(
 			(job) => job.label?.toLowerCase().includes(query)
 		);
-	}
-
-	private syncSelectedJob(): void {
-		if (this._selectedJobId == null) {
-			this.selectedJob = undefined;
-			return;
-		}
-
-		this.selectedJob = this.jobOptions.find((job) => job.value === this._selectedJobId) ?? {
-			value: this._selectedJobId,
-			label: this._selectedJobLabel ?? '',
-		};
 	}
 }
