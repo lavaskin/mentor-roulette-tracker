@@ -51,6 +51,7 @@ export const JobSelectOptions: SelectOptionModel[] = [
 	{ label: 'MCH | Machinist', value: JobEnum.Machinist },
 	{ label: 'DNC | Dancer', value: JobEnum.Dancer },
 
-	{ label: 'BLU | Blue Mage', value: JobEnum.BlueMage },
-	{ label: 'BST | Beast Master', value: JobEnum.BeastMaster },
+	// Limited Jobs: These are mapped in the DB, but obviously can't be used in mentor roulettes.
+	// { label: 'BLU | Blue Mage', value: JobEnum.BlueMage },
+	// { label: 'BST | Beast Master', value: JobEnum.BeastMaster },
 ];
