@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { ChartData, ChartOptions, Plugin } from 'chart.js';
 import { Component, effect, inject, input, PLATFORM_ID, signal } from '@angular/core';
-import { DutyExpansionBreakdownStatModel } from '@app/models/duty-expansion-breakdown-stat.model';
+import { PlayedJobDutyBreakdownStatModel } from '@app/models/played-job-duty-breakdown-stat.model';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -9,19 +9,20 @@ import { TagModule } from 'primeng/tag';
 import { createChartTotalLabelPlugin } from '../chart-total-label.plugin';
 
 @Component({
-	selector: 'mrt-duty-breakdown-chart',
+	selector: 'mrt-job-duty-breakdown-chart',
 	imports: [CardModule, ChartModule, SkeletonModule, TagModule],
-	templateUrl: './duty-breakdown-chart.html',
-	styleUrl: './duty-breakdown-chart.scss',
+	templateUrl: './job-duty-breakdown-chart.html',
+	styleUrl: './job-duty-breakdown-chart.scss',
 })
-export class DutyBreakdownChart {
+export class JobDutyBreakdownChart {
 	private _platformId = inject(PLATFORM_ID);
 
-	public breakdown = input<DutyExpansionBreakdownStatModel[]>([]);
+	public breakdown = input<PlayedJobDutyBreakdownStatModel[]>([]);
 	public isLoading = input(false);
 	public chartData = signal<ChartData<'bar'> | null>(null);
 	public chartOptions = signal<ChartOptions<'bar'> | null>(null);
 	public chartPlugins = signal<Plugin<'bar'>[]>([]);
+	public chartHeight = signal(384);
 
 	constructor() {
 		effect(() => {
@@ -29,11 +30,12 @@ export class DutyBreakdownChart {
 		});
 	}
 
-	private initializeChart(breakdown: DutyExpansionBreakdownStatModel[]): void {
+	private initializeChart(breakdown: PlayedJobDutyBreakdownStatModel[]): void {
 		if (!isPlatformBrowser(this._platformId) || breakdown.length === 0) {
 			this.chartData.set(null);
 			this.chartOptions.set(null);
 			this.chartPlugins.set([]);
+			this.chartHeight.set(384);
 			return;
 		}
 
@@ -55,8 +57,10 @@ export class DutyBreakdownChart {
 			documentStyle.getPropertyValue('--p-violet-300') || '#c4b5fd',
 		];
 
+		this.chartHeight.set(Math.max(384, breakdown.length * 52));
+
 		this.chartData.set({
-			labels: breakdown.map((group) => group.expansionLabel),
+			labels: breakdown.map((group) => group.jobLabel),
 			datasets: dutyTypeLabels.map((dutyTypeLabel, index) => ({
 				type: 'bar',
 				label: dutyTypeLabel,
@@ -71,15 +75,15 @@ export class DutyBreakdownChart {
 			})),
 		});
 
-		this.chartPlugins.set([createChartTotalLabelPlugin('x', textColor)]);
+		this.chartPlugins.set([createChartTotalLabelPlugin('y', textColor)]);
 
 		this.chartOptions.set({
+			indexAxis: 'y',
 			responsive: true,
 			maintainAspectRatio: false,
-			aspectRatio: 1.7,
 			layout: {
 				padding: {
-					top: 24,
+					right: 42,
 				},
 			},
 			plugins: {
@@ -99,15 +103,6 @@ export class DutyBreakdownChart {
 			scales: {
 				x: {
 					stacked: true,
-					ticks: {
-						color: textMutedColor,
-					},
-					grid: {
-						color: surfaceBorder,
-					},
-				},
-				y: {
-					stacked: true,
 					beginAtZero: true,
 					ticks: {
 						color: textMutedColor,
@@ -115,6 +110,20 @@ export class DutyBreakdownChart {
 					},
 					grid: {
 						color: surfaceBorder,
+					},
+					title: {
+						display: true,
+						text: 'Number of duties',
+						color: textColor,
+					},
+				},
+				y: {
+					stacked: true,
+					ticks: {
+						color: textMutedColor,
+					},
+					grid: {
+						display: false,
 					},
 				},
 			},

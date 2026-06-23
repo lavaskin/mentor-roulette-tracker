@@ -1,0 +1,29 @@
+:host ::ng-deep .chart-card .p-card-body {
+	padding: 1.5rem;
+}
+
+:host ::ng-deep .chart-card .p-card-content {
+	padding: 0;
+}
+
+:host ::ng-deep .chart-card .p-tag {
+	width: fit-content;
+}
+
+.chart-panel {
+	min-height: 24rem;
+}
+
+:host ::ng-deep .chart-panel canvas {
+	max-height: none;
+}
+
+@media (max-width: 640px) {
+	:host ::ng-deep .chart-card .p-card-body {
+		padding: 1.25rem;
+	}
+
+	.chart-panel {
+		min-height: 20rem;
+	}
+}

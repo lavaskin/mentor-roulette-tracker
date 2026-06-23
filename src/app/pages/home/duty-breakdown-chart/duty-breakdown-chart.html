@@ -6,7 +6,7 @@
 					<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-sky-100/80">Duty breakdown</p>
 					<h2 class="mt-2 text-[clamp(1.4rem,2.6vw,2rem)] font-extrabold leading-tight text-slate-50">Duties by expansion and type</h2>
 					<p class="mt-2 max-w-[42rem] text-[0.98rem] leading-6 text-slate-100/82">
-						Every non-guildhest duty you have logged, grouped by expansion and stacked by duty type.
+						Every non-guildhest duty logged, grouped by expansion and stacked by duty type.
 					</p>
 				</div>
 				<p-tag severity="info" value="Guildhests excluded"></p-tag>
@@ -21,6 +21,7 @@
 					type="bar"
 					[data]="currentChartData"
 					[options]="chartOptions()"
+					[plugins]="chartPlugins()"
 					class="chart-panel block w-full"
 				></p-chart>
 			} @else {

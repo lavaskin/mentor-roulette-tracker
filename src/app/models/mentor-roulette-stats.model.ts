@@ -1,4 +1,5 @@
 import { DutyExpansionBreakdownStatModel } from './duty-expansion-breakdown-stat.model';
+import { PlayedJobDutyBreakdownStatModel } from './played-job-duty-breakdown-stat.model';
 import { PlayedJobStatModel } from './played-job-stat.model';
 import { SeenDutyStatModel } from './seen-duty-stat.model';
 
@@ -8,6 +9,7 @@ export interface MentorRouletteStatsModel {
 	achievementProgressPercent: number;
 	topSeenDuties: SeenDutyStatModel[];
 	topPlayedJobs: PlayedJobStatModel[];
+	playedJobDutyTypeBreakdown: PlayedJobDutyBreakdownStatModel[];
 	totalFailedDuties: number;
 	numberExtremeTrials: number;
 	extremeTrialClearPercent: number;
