@@ -28,6 +28,7 @@ export class RoulettesPage {
 	private _toast: ToastService = inject(ToastService);
 
 	public isLoading = signal(false);
+	public loadErrorMessage = signal<string | null>(null);
 	public logs = signal<MentorRouletteLogModel[]>([]);
 	public cols: { field: string; header: string }[] = [];
 
@@ -61,11 +62,13 @@ export class RoulettesPage {
 
 	public reload(): void {
 		this.isLoading.set(true);
+		this.loadErrorMessage.set(null);
 		this._data.getAll().subscribe({
 			next: (logs: MentorRouletteLogModel[]) => {
 				this.logs.set(logs);
 			},
 			error: (error) => {
+				this.loadErrorMessage.set('Roulette logs could not be loaded. Check that the API is running, then refresh this grid.');
 				this._toast.showApiError('Failed to load roulette logs', error, 'Unable to load roulette logs.');
 			},
 		}).add(() => this.isLoading.set(false));

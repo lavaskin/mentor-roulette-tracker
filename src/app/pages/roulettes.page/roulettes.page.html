@@ -12,6 +12,14 @@
 
 	<button
 		pButton
+		type="button"
+		icon="pi pi-refresh"
+		class="p-button-outlined"
+		[loading]="isLoading()"
+		(click)="reload()"></button>
+
+	<button
+		pButton
 		label="Log New Roulette"
 		icon="pi pi-plus"
 		class="p-button-success"
@@ -70,6 +78,37 @@
 					icon="pi pi-trash"
 					class="p-button-rounded p-button-danger p-button-sm"
 					(click)="openDeleteConfirmModal(rowData.logId)"></button>
+			</td>
+		</tr>
+	</ng-template>
+	<ng-template #emptymessage>
+		<tr>
+			<td [attr.colspan]="cols.length + 1">
+				<div class="grid-state">
+					@if (loadErrorMessage()) {
+						<div class="grid-state__content">
+							<p class="grid-state__title">Unable to load roulettes</p>
+							<p class="grid-state__text">{{ loadErrorMessage() }}</p>
+							<button
+								pButton
+								type="button"
+								label="Refresh roulettes"
+								icon="pi pi-refresh"
+								class="p-button-outlined"
+								(click)="reload()"></button>
+						</div>
+					} @else if (logs().length === 0) {
+						<div class="grid-state__content">
+							<p class="grid-state__title">No roulette logs yet</p>
+							<p class="grid-state__text">Log a roulette run to populate this history table.</p>
+						</div>
+					} @else {
+						<div class="grid-state__content">
+							<p class="grid-state__title">No matching roulette logs</p>
+							<p class="grid-state__text">Adjust the search terms or clear the filter to see more results.</p>
+						</div>
+					}
+				</div>
 			</td>
 		</tr>
 	</ng-template>

@@ -24,14 +24,22 @@
 	<mrt-duty-breakdown-chart [isLoading]="true"></mrt-duty-breakdown-chart>
 } @else if (errorMessage()) {
 	<section class="mt-6">
-		<p-message severity="error" class="error-message">
-			<ng-template #content>
-				<div class="flex flex-col gap-2">
-					<h2 class="m-0 text-[1.4rem] font-bold text-slate-950">Stats unavailable</h2>
-					<p class="m-0 text-slate-800">{{ errorMessage() }}</p>
+		<div class="error-panel rounded-[1.5rem] border border-red-400/30 bg-[linear-gradient(135deg,rgba(127,29,29,0.92)_0%,rgba(153,27,27,0.88)_45%,rgba(69,10,10,0.96)_100%)] px-6 py-6 shadow-[0_24px_55px_rgba(69,10,10,0.22)] sm:px-7">
+			<div class="flex flex-col gap-4">
+				<p class="m-0 text-[0.85rem] font-bold uppercase tracking-[0.14em] text-red-100/80">Home stats unavailable</p>
+				<h2 class="m-0 text-[clamp(1.5rem,2.8vw,2rem)] font-extrabold leading-tight text-white">Couldn&apos;t load mentor roulette stats</h2>
+				<p class="m-0 max-w-[42rem] text-[1rem] leading-7 text-red-50/88">{{ errorMessage() }} Retry the request.</p>
+				<div class="flex flex-wrap gap-3">
+					<button
+						pButton
+						type="button"
+						label="Try again"
+						icon="pi pi-refresh"
+						class="p-button-contrast"
+						(click)="reload()"></button>
 				</div>
-			</ng-template>
-		</p-message>
+			</div>
+		</div>
 	</section>
 } @else if (stats(); as statBlock) {
 	<section class="mt-6 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">

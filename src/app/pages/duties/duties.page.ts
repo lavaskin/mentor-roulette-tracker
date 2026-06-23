@@ -28,6 +28,7 @@ export class DutiesPage implements OnInit {
 	private _toast: ToastService = inject(ToastService);
 
 	public isLoading = signal(false);
+	public loadErrorMessage = signal<string | null>(null);
 	public duties = signal<DutyModel[]>([]);
 	public cols: { field: string; header: string }[] = [];
 
@@ -58,11 +59,13 @@ export class DutiesPage implements OnInit {
 
 	public reload(): void {
 		this.isLoading.set(true);
+		this.loadErrorMessage.set(null);
 		this._data.getAll().subscribe({
 			next: (duties: DutyModel[]) => {
 				this.duties.set(duties);
 			},
 			error: (error) => {
+				this.loadErrorMessage.set('Duties could not be loaded. Check that the API is running, then refresh this grid.');
 				this._toast.showApiError('Failed to load duties', error, 'Unable to load duties.');
 			},
 		}).add(() => this.isLoading.set(false));

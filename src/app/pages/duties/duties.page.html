@@ -14,6 +14,14 @@
 
 	<button
 		pButton
+		type="button"
+		icon="pi pi-refresh"
+		class="p-button-outlined"
+		[loading]="isLoading()"
+		(click)="reload()"></button>
+
+	<button
+		pButton
 		label="Add New Duty"
 		icon="pi pi-plus"
 		class="p-button-success"
@@ -58,6 +66,37 @@
 					icon="pi pi-trash"
 					class="p-button-rounded p-button-danger p-button-sm"
 					(click)="openDeleteConfirmModal(rowData.dutyId)"></button>
+			</td>
+		</tr>
+	</ng-template>
+	<ng-template #emptymessage>
+		<tr>
+			<td [attr.colspan]="cols.length + 1">
+				<div class="grid-state">
+					@if (loadErrorMessage()) {
+						<div class="grid-state__content">
+							<p class="grid-state__title">Unable to load duties</p>
+							<p class="grid-state__text">{{ loadErrorMessage() }}</p>
+							<button
+								pButton
+								type="button"
+								label="Refresh duties"
+								icon="pi pi-refresh"
+								class="p-button-outlined"
+								(click)="reload()"></button>
+						</div>
+					} @else if (duties().length === 0) {
+						<div class="grid-state__content">
+							<p class="grid-state__title">No duties yet</p>
+							<p class="grid-state__text">Create your first duty to start logging roulettes.</p>
+						</div>
+					} @else {
+						<div class="grid-state__content">
+							<p class="grid-state__title">No matching duties</p>
+							<p class="grid-state__text">Adjust the search terms or clear the filter to see more results.</p>
+						</div>
+					}
+				</div>
 			</td>
 		</tr>
 	</ng-template>
