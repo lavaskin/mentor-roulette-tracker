@@ -10,7 +10,7 @@
 
 @if (isLoading()) {
 	<section class="mt-6 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
-		@for (card of [1, 2, 3, 4, 5, 6, 7]; track card) {
+		@for (card of [1, 2, 3, 4, 5, 6]; track card) {
 			<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 				<div class="flex min-h-full flex-col gap-3.5">
 					<p-skeleton width="7rem" height="0.85rem"></p-skeleton>
@@ -20,6 +20,8 @@
 			</p-card>
 		}
 	</section>
+
+	<mrt-duty-breakdown-chart [isLoading]="true"></mrt-duty-breakdown-chart>
 } @else if (errorMessage()) {
 	<section class="mt-6">
 		<p-message severity="error" class="error-message">
@@ -70,14 +72,6 @@
 
 		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 			<div class="flex min-h-full flex-col gap-3.5">
-				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Most common expansion</p>
-				<p class="m-0 text-[clamp(1.4rem,3vw,2rem)] font-extrabold leading-[1.25] text-white">{{ statBlock.mostCommonExpansion || 'No qualifying runs yet' }}</p>
-				<p-tag severity="info" value="Guildhests excluded"></p-tag>
-			</div>
-		</p-card>
-
-		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
-			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Top played jobs</p>
 				@if (statBlock.topPlayedJobs.length > 0) {
 					<div class="flex flex-col gap-2">
@@ -109,4 +103,6 @@
 			</div>
 		</p-card>
 	</section>
+
+	<mrt-duty-breakdown-chart [breakdown]="statBlock.dutyExpansionBreakdown"></mrt-duty-breakdown-chart>
 }

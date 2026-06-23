@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { MentorRouletteStatsModel } from '@app/models/mentor-roulette-stats.model';
+import { DutyBreakdownChart } from './duty-breakdown-chart/duty-breakdown-chart';
 import { MentorRouletteLogService } from '@app/services/mentor-roulette-log.service';
 import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
@@ -9,7 +10,7 @@ import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'mrt-page-home',
-  imports: [CardModule, MessageModule, ProgressBarModule, SkeletonModule, TagModule],
+  imports: [CardModule, DutyBreakdownChart, MessageModule, ProgressBarModule, SkeletonModule, TagModule],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
   providers: [MentorRouletteLogService],
@@ -35,5 +36,4 @@ export class HomePage {
       })
       .add(() => this.isLoading.set(false));
   }
-
 }
