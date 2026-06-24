@@ -48,7 +48,10 @@
 			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Total Clears</p>
 				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.completedRoulettes }}</p>
-				<p-tag severity="contrast" [value]="statBlock.totalRuns + ' roulettes'"></p-tag>
+				<div class="flex gap-2">
+					<p-tag severity="contrast" [value]="statBlock.totalRuns + ' roulettes'"></p-tag>
+					<p-tag severity="danger" [value]="statBlock.totalFailedDuties + ' failed'"></p-tag>
+				</div>
 			</div>
 		</p-card>
 
@@ -102,13 +105,6 @@
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Extreme trial clear rate</p>
 				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.extremeTrialClearPercent }}%</p>
 				<p-tag severity="warn" [value]="statBlock.numberExtremeTrials + ' extreme trials logged'"></p-tag>
-			</div>
-		</p-card>
-
-		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
-			<div class="flex min-h-full flex-col gap-3.5">
-				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Failed duties</p>
-				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.totalFailedDuties }}</p>
 			</div>
 		</p-card>
 	</section>
