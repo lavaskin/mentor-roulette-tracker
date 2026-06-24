@@ -11,7 +11,7 @@
 @if (isLoading()) {
 	<section class="mt-6 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
 		@for (card of [1, 2, 3, 4, 5, 6]; track card) {
-			<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+			<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 ">
 				<div class="flex min-h-full flex-col gap-3.5">
 					<p-skeleton width="7rem" height="0.85rem"></p-skeleton>
 					<p-skeleton width="5rem" height="2.75rem"></p-skeleton>
@@ -44,6 +44,7 @@
 	</section>
 } @else if (stats(); as statBlock) {
 	<section class="mt-6 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
+		<!-- Total Clears/Fails -->
 		<p-card class="stat-card rounded-[1.25rem] border border-amber-500/25 bg-gradient-to-br from-amber-100 to-amber-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Total Clears</p>
@@ -55,7 +56,8 @@
 			</div>
 		</p-card>
 
-		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<!-- Total Achievement Progress-->
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20">
 			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Achievement progress</p>
 				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.achievementProgressPercent }}%</p>
@@ -64,9 +66,10 @@
 			</div>
 		</p-card>
 
-		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<!-- Most Seen Duties -->
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20">
 			<div class="flex min-h-full flex-col gap-3.5">
-				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Top seen duties</p>
+				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Most seen duties</p>
 				@if (statBlock.topSeenDuties.length > 0) {
 					<div class="flex flex-col gap-2">
 						@for (duty of statBlock.topSeenDuties; track duty.dutyName) {
@@ -82,7 +85,8 @@
 			</div>
 		</p-card>
 
-		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<!-- Top Played Jobs -->
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20">
 			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Top played jobs</p>
 				@if (statBlock.topPlayedJobs.length > 0) {
@@ -100,7 +104,8 @@
 			</div>
 		</p-card>
 
-		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+		<!-- Extreme Trial Clear Rate -->
+		<p-card class="stat-card rounded-[1.25rem] border border-slate-300/20">
 			<div class="flex min-h-full flex-col gap-3.5">
 				<p class="m-0 text-[0.9rem] font-bold uppercase tracking-[0.08em] text-white/80">Extreme trial clear rate</p>
 				<p class="m-0 text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.1] text-white">{{ statBlock.extremeTrialClearPercent }}%</p>
