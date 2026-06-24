@@ -148,6 +148,20 @@ export class RoulettesPage {
 		);
 	}
 
+	public getLocalUtcDate(value: string | null | undefined): Date | null {
+		if (!value) {
+			return null;
+		}
+
+		const normalizedValue = /(?:z|[+-]\d{2}:\d{2})$/i.test(value)
+			? value
+			: `${value}Z`;
+
+		const parsedDate = new Date(normalizedValue);
+
+		return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+	}
+
 	public getNestedProperty(obj: any, path: string): any {
 		return path.split('.').reduce((prev, curr) => prev?.[curr], obj);
 	}
