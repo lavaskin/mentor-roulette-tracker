@@ -243,6 +243,7 @@ export class EditDutyModal implements OnChanges, OnInit {
 
 		const value = this.form.value;
 		this.save.emit({
+			dutyId: this.duty?.dutyId,
 			name: value.name,
 			dutyType: value.dutyType,
 			expansion: value.expansion,
