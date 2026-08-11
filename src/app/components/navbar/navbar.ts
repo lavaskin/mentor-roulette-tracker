@@ -13,5 +13,6 @@ export class Navbar {
 		{ label: 'Home', path: '/' },
 		{ label: 'Roulettes', path: '/roulettes' },
 		{ label: 'Duties', path: '/duties' },
+		{ label: 'Spin', path: '/spin' },
 	]);
 }

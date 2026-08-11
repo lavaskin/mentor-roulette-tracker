@@ -1,0 +1,34 @@
+<div class="wheel-shell flex flex-col items-center gap-6">
+	<div class="wheel-stage relative">
+		<div class="pointer" aria-hidden="true"></div>
+
+		<div
+			class="wheel"
+			[class.wheel--spinning]="isSpinning()"
+			[style.background]="conicGradient()"
+			[style.transform]="'rotate(' + rotationDeg() + 'deg)'"
+			(transitionend)="onTransitionEnd($event)">
+			@for (label of labelPositions(); track label.id) {
+				<span
+					class="segment-label"
+					[style.left]="label.left"
+					[style.top]="label.top"
+					[style.transform]="'translate(-50%, -50%) rotate(' + label.rotate + ')'">
+					{{ label.label }}
+				</span>
+			}
+
+			<div class="wheel-hub" aria-hidden="true"></div>
+		</div>
+	</div>
+
+	<button
+		pButton
+		type="button"
+		label="Spin"
+		icon="pi pi-refresh"
+		class="spin-btn"
+		[disabled]="!canSpin()"
+		[attr.aria-busy]="isSpinning()"
+		(click)="spin()"></button>
+</div>

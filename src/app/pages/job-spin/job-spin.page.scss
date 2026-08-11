@@ -1,0 +1,70 @@
+:host {
+	display: block;
+}
+
+.controls-card,
+.wheel-card,
+.result-card {
+	display: block;
+}
+
+.toggle-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+	gap: 0.65rem;
+}
+
+.toggle-item {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	padding: 0.65rem 0.75rem;
+	border-radius: 0.85rem;
+	border: 1px solid color-mix(in srgb, var(--accent, #94a3b8) 45%, transparent);
+	background: color-mix(in srgb, var(--accent, #334155) 16%, rgba(15, 23, 42, 0.55));
+	cursor: pointer;
+	user-select: none;
+}
+
+.toggle-item__text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.toggle-item__label {
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	color: #fff;
+	line-height: 1.15;
+}
+
+.toggle-item__sub {
+	font-size: 0.8rem;
+	color: rgba(226, 232, 240, 0.82);
+	line-height: 1.2;
+}
+
+.spin-layout {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.25rem;
+	align-items: start;
+}
+
+@media (min-width: 900px) {
+	.spin-layout {
+		grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
+	}
+}
+
+:host ::ng-deep {
+	.p-selectbutton {
+		flex-wrap: wrap;
+		gap: 0.35rem;
+	}
+
+	.p-selectbutton .p-togglebutton {
+		margin: 0;
+	}
+}

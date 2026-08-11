@@ -1,0 +1,116 @@
+<section class="mt-6 flex flex-col gap-6">
+	<p-card class="controls-card rounded-[1.25rem] border border-slate-300/20">
+		<div class="flex flex-col gap-5">
+			<div>
+				<p class="m-0 mb-3 text-[0.85rem] font-bold uppercase tracking-[0.1em] text-white/75">
+					Category
+				</p>
+				<p-selectbutton
+					[options]="categoryOptions"
+					[ngModel]="category()"
+					(ngModelChange)="onCategoryChange($event)"
+					optionLabel="label"
+					optionValue="value"
+					[allowEmpty]="false"
+					[disabled]="isWheelSpinning()"
+					aria-label="Spin category" />
+			</div>
+
+			<div>
+				<div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+					<p class="m-0 text-[0.85rem] font-bold uppercase tracking-[0.1em] text-white/75">
+						@if (isRolesMode()) {
+							Roles on the wheel
+						} @else {
+							Jobs on the wheel
+						}
+					</p>
+					<div class="flex flex-wrap gap-2">
+						<button
+							pButton
+							type="button"
+							label="Select all"
+							size="small"
+							severity="secondary"
+							[disabled]="isWheelSpinning()"
+							(click)="selectAllToggles()"></button>
+						<button
+							pButton
+							type="button"
+							label="Clear"
+							size="small"
+							severity="secondary"
+							[disabled]="isWheelSpinning()"
+							(click)="clearAllToggles()"></button>
+					</div>
+				</div>
+
+				<div class="toggle-grid">
+					@for (item of toggleItems(); track item.id) {
+						<label class="toggle-item" [style.--accent]="item.color">
+							<p-checkbox
+								[binary]="true"
+								[ngModel]="isEnabled(item.id)"
+								(ngModelChange)="toggleId(item.id, $event)"
+								[disabled]="isWheelSpinning()"
+								[inputId]="'spin-toggle-' + item.id" />
+							<span class="toggle-item__text">
+								<span class="toggle-item__label">{{ item.label }}</span>
+								@if (item.sublabel) {
+									<span class="toggle-item__sub">{{ item.sublabel }}</span>
+								}
+							</span>
+						</label>
+					}
+				</div>
+			</div>
+		</div>
+	</p-card>
+
+	<div class="spin-layout">
+		<p-card class="wheel-card rounded-[1.25rem] border border-slate-300/20">
+			@if (segments().length === 0) {
+				<div class="empty-pool flex flex-col items-center gap-3 px-4 py-10 text-center">
+					<p class="m-0 text-[0.85rem] font-bold uppercase tracking-[0.12em] text-amber-200/90">
+						Empty pool
+					</p>
+					<p class="m-0 max-w-sm text-slate-200/90">
+						Select at least one
+						@if (isRolesMode()) {
+							role
+						} @else {
+							job
+						}
+						to spin.
+					</p>
+				</div>
+			} @else {
+				<mrt-job-spin-wheel
+					[segments]="segments()"
+					(landed)="onLanded($event)"
+					(spinningChange)="onWheelSpinningChange($event)" />
+			}
+		</p-card>
+
+		<p-card class="result-card rounded-[1.25rem] border border-slate-300/20">
+			<div class="flex flex-col gap-3" aria-live="polite" aria-atomic="true">
+				@if (lastResult(); as result) {
+					<p class="m-0 text-[0.85rem] font-bold uppercase tracking-[0.12em] text-white/75">
+						Result
+					</p>
+					<p
+						class="m-0 text-[clamp(1.75rem,3.5vw,2.4rem)] font-extrabold leading-tight"
+						[style.color]="result.color">
+						{{ resultTitle(result) }}
+					</p>
+					<p-tag [value]="isRolesMode() ? 'Role' : 'Job'" [style]="{ background: result.color }" />
+				} @else {
+					<p class="m-0 text-[0.85rem] font-bold uppercase tracking-[0.12em] text-white/75">
+						Result
+					</p>
+					<p class="m-0 text-lg text-slate-300/90">Spin the wheel to get a pick.</p>
+				}
+			</div>
+		</p-card>
+	</div>
+</section>
