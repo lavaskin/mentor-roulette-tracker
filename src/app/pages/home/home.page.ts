@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { MentorRouletteStatsModel } from '@app/models/mentor-roulette-stats.model';
 import { DutyBreakdownChart } from './duty-breakdown-chart/duty-breakdown-chart';
+import { DutyTypeRoleBreakdownChart } from './duty-type-role-breakdown-chart/duty-type-role-breakdown-chart';
 import { JobDutyBreakdownChart } from './job-duty-breakdown-chart/job-duty-breakdown-chart';
 import { MentorRouletteLogService } from '@app/services/mentor-roulette-log.service';
 import { ButtonModule } from 'primeng/button';
@@ -11,7 +12,7 @@ import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'mrt-page-home',
-  imports: [ButtonModule, CardModule, DutyBreakdownChart, JobDutyBreakdownChart, ProgressBarModule, SkeletonModule, TagModule],
+  imports: [ButtonModule, CardModule, DutyBreakdownChart, DutyTypeRoleBreakdownChart, JobDutyBreakdownChart, ProgressBarModule, SkeletonModule, TagModule],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
   providers: [MentorRouletteLogService],
