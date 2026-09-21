@@ -38,9 +38,12 @@ export class EditMentorLogModal {
 	@Input() isLoading: boolean = false;
 	@Output() save: EventEmitter<MentorRouletteLogModel> = new EventEmitter<MentorRouletteLogModel>();
 
+	/** Relays the duty name typed into the duty picker when the user asks to create a new duty. */
+	@Output() addNewDuty: EventEmitter<string> = new EventEmitter<string>();
+
 	public jobOptions = JobSelectOptions;
 
-	public onSave(): void {1
+	public onSave(): void {
 		if (this.log) {
 			this.save.emit(this.log);
 		}

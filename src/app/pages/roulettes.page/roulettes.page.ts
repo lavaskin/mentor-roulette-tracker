@@ -4,7 +4,9 @@ import { ConfirmModal } from '@app/components/confirm-modal/confirm-modal';
 import { EditMentorLogModal } from '@app/components/edit-mentor-log-modal/edit-mentor-log-modal';
 import { SearchBar } from '@app/components/search-bar/search-bar';
 import { MentorRouletteLogModel } from '@app/models/entity/mentor-roulette-log.model';
+import { NEW_DUTY_HANDOFF_KEY, NewDutyHandoffModel, RESUME_LOG_HANDOFF_KEY, ResumeLogHandoffModel } from '@app/models/navigation-handoff.model';
 import { MentorRouletteLogService } from '@app/services/mentor-roulette-log.service';
+import { NavigationHandoffService } from '@app/services/navigation-handoff.service';
 import { ToastService } from '@app/services/toast.service';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -26,6 +28,7 @@ import { TableModule } from 'primeng/table';
 export class RoulettesPage {
 	private _data: MentorRouletteLogService = inject(MentorRouletteLogService);
 	private _toast: ToastService = inject(ToastService);
+	private _handoff: NavigationHandoffService = inject(NavigationHandoffService);
 
 	public isLoading = signal(false);
 	public loadErrorMessage = signal<string | null>(null);
@@ -58,6 +61,31 @@ export class RoulettesPage {
 
 	ngOnInit(): void {
 		this.reload();
+		this.resumeLogInProgress();
+	}
+
+	/** Reopens the log modal if the user was bounced to the duties page to create a duty. */
+	private resumeLogInProgress(): void {
+		const handoff = this._handoff.consume<ResumeLogHandoffModel>(RESUME_LOG_HANDOFF_KEY);
+		if (!handoff) return;
+
+		this.selectedLog.set(handoff.log);
+		this.isNewLog.set(handoff.isNewLog);
+		this.showEditModal.set(true);
+	}
+
+	/** Parks the in-progress log and sends the user to the duties page to create the missing duty. */
+	public onAddNewDuty(dutyName: string): void {
+		const log = this.selectedLog();
+		if (!log) return;
+
+		this.showEditModal.set(false);
+
+		this._handoff.navigateWith<NewDutyHandoffModel>(['/duties'], NEW_DUTY_HANDOFF_KEY, {
+			dutyName,
+			log,
+			isNewLog: this.isNewLog(),
+		});
 	}
 
 	public reload(): void {

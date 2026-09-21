@@ -86,7 +86,11 @@ export class EditDutyModal implements OnChanges, OnInit {
 	private previousDutyType: DutyTypeEnum | undefined;
 
 	public ngOnInit(): void {
-		this.buildForm();
+		// ngOnChanges runs before ngOnInit, so when a duty is bound on the very first render the
+		// form is already built and populated. Rebuilding here would blank out those values.
+		if (!this.form) {
+			this.buildForm();
+		}
 	}
 
 	public ngOnChanges(changes: SimpleChanges): void {

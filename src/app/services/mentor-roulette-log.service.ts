@@ -23,11 +23,21 @@ export class MentorRouletteLogService {
 	}
 
 	public create(mentorRouletteLog: MentorRouletteLogModel): Observable<MentorRouletteLogModel> {
-		return this._http.post<MentorRouletteLogModel>(`${this._baseUrl}`, mentorRouletteLog);
+		return this._http.post<MentorRouletteLogModel>(`${this._baseUrl}`, this.toWritePayload(mentorRouletteLog));
 	}
 	
 	public update(mentorRouletteLog: MentorRouletteLogModel): Observable<MentorRouletteLogModel> {
-		return this._http.put<MentorRouletteLogModel>(`${this._baseUrl}/${mentorRouletteLog.mentorRouletteLogId}`, mentorRouletteLog);
+		return this._http.put<MentorRouletteLogModel>(`${this._baseUrl}/${mentorRouletteLog.mentorRouletteLogId}`, this.toWritePayload(mentorRouletteLog));
+	}
+
+	/**
+	 * `dutyModel` is a read-only projection the API sends down for display, and `dutyId` is the real
+	 * foreign key. Posting the nested duty back makes EF treat it as a new Duty to insert, which
+	 * fails with "Cannot insert explicit value for identity column".
+	 */
+	private toWritePayload(mentorRouletteLog: MentorRouletteLogModel): MentorRouletteLogModel {
+		const { dutyModel: _dutyModel, ...payload } = mentorRouletteLog;
+		return payload;
 	}
 	
 	public delete(mentorRouletteLogId: number): Observable<void> {

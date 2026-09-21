@@ -103,7 +103,8 @@
 </p-table>
 
 <mrt-edit-duty-modal
-	[(visible)]="showEditDutyModal"
+	[visible]="showEditDutyModal()"
+	(visibleChange)="onEditDutyVisibleChange($event)"
 	[duty]="selectedDuty()"
 	[isNew]="isNewDuty()"
 	(save)="onDutySaved($event)"/>

@@ -4,14 +4,12 @@ import { DutiesService } from '@app/services/duties.service';
 import { ListResultItemModel } from '@app/models/list-result-item.model';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
-import { RouterModule } from '@angular/router';
 import { AutocompleteSelectionBase } from '../shared/autocomplete-selection-base';
 
 @Component({
 	selector: 'mrt-duties-autocomplete',
 	imports: [
 		FormsModule,
-		RouterModule,
 		AutoCompleteModule,
 		ButtonModule,
 	],
@@ -42,15 +40,26 @@ export class DutiesAutocomplete extends AutocompleteSelectionBase<ListResultItem
 
 	@Output() selectedDutyIdChange: EventEmitter<number | undefined> = new EventEmitter<number | undefined>();
 
+	/** Emits the text currently typed into the search box so the host can pre-fill a new duty. */
+	@Output() addNewDuty: EventEmitter<string> = new EventEmitter<string>();
+
 	public filteredOptions = signal<ListResultItemModel[]>([]);
+
+	private _lastQuery: string = '';
 
 	public onOptionSelected(value?: ListResultItemModel): void {
 		this.selectedDutyIdChange.emit(this.handleModelChange(value));
 	}
 
+	public onAddNewDuty(): void {
+		this.addNewDuty.emit(this._lastQuery.trim());
+	}
+
 	public filterDuties(event: any): void {
+		this._lastQuery = event.query || '';
+
 		this._dutiesService.getResultItems({
-			query: event.query || '',
+			query: this._lastQuery,
 			pageSize: 10,
 		}).subscribe({
 			next: (results) => {

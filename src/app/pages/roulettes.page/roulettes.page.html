@@ -118,6 +118,7 @@
 	[(visible)]="showEditModal"
 	[log]="selectedLog()"
 	[isNew]="isNewLog()"
+	(addNewDuty)="onAddNewDuty($event)"
 	(save)="onLogSaved($event)"/>
 
 <!-- Confirm Delete Modal -->

@@ -12,7 +12,7 @@
 	<ng-template #footer>
 		<div class="pt-1">
 			<p-button
-				routerLink="/duties"
+				(onClick)="onAddNewDuty()"
 				class="mx-auto"
 				label="Add New Duty"
 				fluid
