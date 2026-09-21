@@ -1,17 +1,23 @@
-<nav class="p-4 px-8">
-	<ul class="flex flex-row gap-4 items-center">
-		<li><img src="combat-mentor-icon.png" alt="Combat Mentor Icon"></li>
+<div class="flex items-center gap-4 px-4 border-b border-surface">
+	<a routerLink="/" class="flex items-center gap-2 shrink-0 no-underline text-inherit py-2">
+		<img src="combat-mentor-icon.png" alt="" width="25" height="25" class="block" />
+		<span class="font-semibold text-sm whitespace-nowrap">Mentor Roulette Tracker</span>
+	</a>
 
-		@for (link of links(); track $index) {
-			<li>
-				<a
-					pButton
-					[routerLink]="link.path"
-					size="small">
+	<p-tabs
+		class="flex-1 min-w-0"
+		[value]="activePath()"
+		(valueChange)="onTabChange($event)"
+		[dt]="tabsDt"
+		ariaLabel="Main navigation">
+		<p-tablist>
+			@for (tab of tabs(); track tab.path) {
+				<p-tab [value]="tab.path" class="flex items-center gap-2">
+					<i [class]="tab.icon" aria-hidden="true"></i>
+					<span>{{ tab.label }}</span>
+				</p-tab>
+			}
+		</p-tablist>
+	</p-tabs>
+</div>
 
-					{{ link.label }}
-				</a>
-			</li>
-		}
-	</ul>
-</nav>
