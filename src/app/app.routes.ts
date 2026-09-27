@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { HomePage } from './pages/home/home.page';
 import { DutiesPage } from './pages/duties/duties.page';
 import { JobSpinPage } from './pages/job-spin/job-spin.page';
-import { RoulettesPage } from './pages/roulettes.page/roulettes.page';
+import { RoulettesPage } from './pages/roulettes/roulettes.page';
 
 export const routes: Routes = [
 	{ path: '', component: HomePage, },
