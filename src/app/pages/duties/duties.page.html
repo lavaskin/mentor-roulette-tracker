@@ -2,14 +2,14 @@
 	<h1 class="mr-auto text-2xl font-bold">Duties</h1>
 
 	<!-- Page Actions -->
-	 @if (duties().length > filteredDuties.length) {
-		<p class="text-lg italic">{{ filteredDuties.length }} filtered results</p>
+	@if (grid.isSearching()) {
+		<p class="text-lg italic">{{ grid.totalCount() }} filtered results</p>
 	} @else {
-		<p class="text-lg">{{ filteredDuties.length }} Registered Duties</p>
+		<p class="text-lg">{{ grid.totalCount() }} Registered Duties</p>
 	}
 
 	<mrt-search-bar
-		[(ngModel)]="searchQuery"
+		(ngModelChange)="grid.setSearch($event)"
 		placeholder="Search Duties..." />
 
 	<button
@@ -17,8 +17,8 @@
 		type="button"
 		icon="pi pi-refresh"
 		class="p-button-outlined"
-		[loading]="isLoading()"
-		(click)="reload()"></button>
+		[loading]="grid.isLoading()"
+		(click)="grid.reload()"></button>
 
 	<button
 		pButton
@@ -28,19 +28,31 @@
 		(click)="openNewDutyModal()"></button>
 </div>
 
+<!-- Paging, sorting and search all run on the API: see ServerGrid -->
 <p-table
 	[columns]="cols"
-	[value]="filteredDuties"
-	[loading]="isLoading()"
+	[value]="grid.items()"
+	[loading]="grid.isLoading()"
+	[lazy]="true"
+	(onLazyLoad)="grid.onLazyLoad($event)"
+	[paginator]="true"
+	[first]="grid.first()"
+	[rows]="grid.pageSize()"
+	[totalRecords]="grid.totalCount()"
+	[rowsPerPageOptions]="grid.pageSizeOptions"
+	[showCurrentPageReport]="true"
+	currentPageReportTemplate="{first} - {last} of {totalRecords}"
+	sortField="name"
+	[sortOrder]="1"
 	showGridlines="true"
 	stripedRows="true">
 
 	<ng-template #header let-columns>
 		<tr>
 			@for (col of columns; track col) {
-				<th [pSortableColumn]="col.field">
+				<th [pSortableColumn]="col.sortField">
 					<span class="mr-2">{{ col.header }}</span>
-					<p-sortIcon [field]="col.field"></p-sortIcon>
+					<p-sortIcon [field]="col.sortField"></p-sortIcon>
 				</th>
 			}
 
@@ -73,19 +85,19 @@
 		<tr>
 			<td [attr.colspan]="cols.length + 1">
 				<div class="grid-state">
-					@if (loadErrorMessage()) {
+					@if (grid.loadFailed()) {
 						<div class="grid-state__content">
 							<p class="grid-state__title">Unable to load duties</p>
-							<p class="grid-state__text">{{ loadErrorMessage() }}</p>
+							<p class="grid-state__text">Duties could not be loaded. Check that the API is running, then refresh this grid.</p>
 							<button
 								pButton
 								type="button"
 								label="Refresh duties"
 								icon="pi pi-refresh"
 								class="p-button-outlined"
-								(click)="reload()"></button>
+								(click)="grid.reload()"></button>
 						</div>
-					} @else if (duties().length === 0) {
+					} @else if (!grid.isSearching()) {
 						<div class="grid-state__content">
 							<p class="grid-state__title">No duties yet</p>
 							<p class="grid-state__text">Create your first duty to start logging roulettes.</p>

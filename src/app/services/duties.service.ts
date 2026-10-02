@@ -5,14 +5,18 @@ import { inject } from "@angular/core";
 import { Observable } from "rxjs";
 import { SearchOptionsModel } from "@app/models/search-options.model";
 import { ListResultItemModel } from "@app/models/list-result-item.model";
+import { GridRequestModel } from "@app/models/grid-request.model";
+import { PagedResponseModel } from "@app/models/paged-response.model";
+import { toGridHttpParams } from "./grid-http-params";
 
 export class DutiesService {
 	private _baseUrl: string = `${environment.apiBaseUrl}/duty`;
 
 	private _http: HttpClient = inject(HttpClient);
 
-	public getAll(): Observable<DutyModel[]> {
-		return this._http.get<DutyModel[]>(`${this._baseUrl}`);
+	/** Sort keys: dutyId, name, levelRequirement, expansion, dutyType. Defaults to name ascending. */
+	public getPage(request: GridRequestModel): Observable<PagedResponseModel<DutyModel>> {
+		return this._http.get<PagedResponseModel<DutyModel>>(`${this._baseUrl}`, { params: toGridHttpParams(request) });
 	}
 
 	public getById(dutyId: number): Observable<DutyModel> {

@@ -2,16 +2,23 @@ import { HttpClient } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { MentorRouletteStatsModel } from "@app/models/mentor-roulette-stats.model";
 import { MentorRouletteLogModel } from "@app/models/entity/mentor-roulette-log.model";
+import { GridRequestModel } from "@app/models/grid-request.model";
+import { PagedResponseModel } from "@app/models/paged-response.model";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs";
+import { toGridHttpParams } from "./grid-http-params";
 
 export class MentorRouletteLogService {
 	private _baseUrl: string = `${environment.apiBaseUrl}/mentorroulette`;
 
 	private _http: HttpClient = inject(HttpClient);
 
-	public getAll(): Observable<MentorRouletteLogModel[]> {
-		return this._http.get<MentorRouletteLogModel[]>(`${this._baseUrl}`);
+	/**
+	 * Sort keys: sortOrder, playedJob, dutyName, dutyType, completed, replacement, notes, datePlayed.
+	 * Defaults to newest run (highest sortOrder) first.
+	 */
+	public getPage(request: GridRequestModel): Observable<PagedResponseModel<MentorRouletteLogModel>> {
+		return this._http.get<PagedResponseModel<MentorRouletteLogModel>>(`${this._baseUrl}`, { params: toGridHttpParams(request) });
 	}
 
 	public getById(mentorRouletteLogId: number): Observable<MentorRouletteLogModel> {

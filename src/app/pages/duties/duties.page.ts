@@ -10,6 +10,7 @@ import { EditDutyModal } from "@app/components/edit-duty-modal/edit-duty-modal";
 import { ConfirmModal } from "@app/components/confirm-modal/confirm-modal";
 import { SearchBar } from '@app/components/search-bar/search-bar';
 import { ToastService } from '@app/services/toast.service';
+import { GridColumn, MAX_GRID_PAGE_SIZE, ServerGrid } from '@app/shared/server-grid';
 
 @Component({
 	selector: 'mrt-page-duties',
@@ -33,10 +34,20 @@ export class DutiesPage implements OnInit {
 	/** Set when the user arrived here mid-way through filling in a roulette log. */
 	private _pendingLog: NewDutyHandoffModel | null = null;
 
-	public isLoading = signal(false);
-	public loadErrorMessage = signal<string | null>(null);
-	public duties = signal<DutyModel[]>([]);
-	public cols: { field: string; header: string }[] = [];
+	/** Loads its first page when the table initializes, so ngOnInit doesn't need to. */
+	public grid = new ServerGrid<DutyModel>(
+		(request) => this._data.getPage(request),
+		(error) => this._toast.showApiError('Failed to load duties', error, 'Unable to load duties.'),
+	);
+
+	/** Enum columns (expansion, type) sort in game order on the API, not alphabetically by label. */
+	public cols: GridColumn[] = [
+		{ field: 'dutyId', header: 'ID', sortField: 'dutyId' },
+		{ field: 'name', header: 'Name', sortField: 'name' },
+		{ field: 'levelRequirement', header: 'Level', sortField: 'levelRequirement' },
+		{ field: 'expansionLabel', header: 'Expansion', sortField: 'expansion' },
+		{ field: 'dutyTypeLabel', header: 'Type', sortField: 'dutyType' },
+	];
 
 	public isLoadingSave = signal(false);
 	public showEditDutyModal = signal(false);
@@ -47,39 +58,11 @@ export class DutiesPage implements OnInit {
 	public showDeleteConfirmModal = signal(false);
 	public dutyToDeleteId = signal<number | null>(null);
 
-	public searchQuery = signal<string>('');
-
-	constructor() {
-		this.cols = [
-            { field: 'dutyId', header: 'ID' },
-			{ field: 'name', header: 'Name' },
-            { field: 'levelRequirement', header: 'Level' },
-            { field: 'expansionLabel', header: 'Expansion' },
-            { field: 'dutyTypeLabel', header: 'Type' },
-        ];
-	}
-
 	ngOnInit(): void {
-		this.reload();
-
 		this._pendingLog = this._handoff.consume<NewDutyHandoffModel>(NEW_DUTY_HANDOFF_KEY);
 		if (this._pendingLog) {
 			this.openNewDutyModal(this._pendingLog.dutyName);
 		}
-	}
-
-	public reload(): void {
-		this.isLoading.set(true);
-		this.loadErrorMessage.set(null);
-		this._data.getAll().subscribe({
-			next: (duties: DutyModel[]) => {
-				this.duties.set(duties);
-			},
-			error: (error) => {
-				this.loadErrorMessage.set('Duties could not be loaded. Check that the API is running, then refresh this grid.');
-				this._toast.showApiError('Failed to load duties', error, 'Unable to load duties.');
-			},
-		}).add(() => this.isLoading.set(false));
 	}
 
 	public openNewDutyModal(name: string = ''): void {
@@ -129,7 +112,7 @@ export class DutiesPage implements OnInit {
 					return;
 				}
 
-				this.reload();
+				this.grid.reload();
 			},
 			error: (error) => {
 				this._toast.showApiError(
@@ -155,9 +138,9 @@ export class DutiesPage implements OnInit {
 		}
 
 		// Not every API returns the created entity, so fall back to locating it by name.
-		this._data.getAll().subscribe({
-			next: (duties: DutyModel[]) => {
-				this.resumeLog(pending, duties.find(existing => existing.name === submittedDuty.name));
+		this._data.getPage({ page: 1, pageSize: MAX_GRID_PAGE_SIZE, search: submittedDuty.name }).subscribe({
+			next: (page) => {
+				this.resumeLog(pending, page.items.find(existing => existing.name === submittedDuty.name));
 			},
 			error: () => this.resumeLog(pending),
 		});
@@ -188,21 +171,11 @@ export class DutiesPage implements OnInit {
 			next: () => {
 				this.showDeleteConfirmModal.set(false);
 				this.dutyToDeleteId.set(null);
-				this.reload();
+				this.grid.reload();
 			},
 			error: (error) => {
 				this._toast.showApiError('Failed to delete duty', error, 'Unable to delete the duty.');
 			},
 		}).add(() => this.isLoadingDelete.set(false));
-	}
-
-	public get filteredDuties(): DutyModel[] {
-		const query = this.searchQuery().toLowerCase();
-		return this.duties().filter(duty =>
-			duty.name?.toLowerCase().includes(query) ||
-			duty.expansionLabel?.toLowerCase().includes(query) ||
-			duty.dutyTypeLabel?.toLowerCase().includes(query) ||
-			(duty.levelRequirement !== null && duty.levelRequirement !== undefined && duty.levelRequirement.toString().includes(query))
-		);
 	}
 }

@@ -8,6 +8,7 @@ import { NEW_DUTY_HANDOFF_KEY, NewDutyHandoffModel, RESUME_LOG_HANDOFF_KEY, Resu
 import { MentorRouletteLogService } from '@app/services/mentor-roulette-log.service';
 import { NavigationHandoffService } from '@app/services/navigation-handoff.service';
 import { ToastService } from '@app/services/toast.service';
+import { GridColumn, ServerGrid } from '@app/shared/server-grid';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
@@ -30,10 +31,23 @@ export class RoulettesPage {
 	private _toast: ToastService = inject(ToastService);
 	private _handoff: NavigationHandoffService = inject(NavigationHandoffService);
 
-	public isLoading = signal(false);
-	public loadErrorMessage = signal<string | null>(null);
-	public logs = signal<MentorRouletteLogModel[]>([]);
-	public cols: { field: string; header: string }[] = [];
+	/** Loads its first page when the table initializes, so ngOnInit doesn't need to. */
+	public grid = new ServerGrid<MentorRouletteLogModel>(
+		(request) => this._data.getPage(request),
+		(error) => this._toast.showApiError('Failed to load roulette logs', error, 'Unable to load roulette logs.'),
+	);
+
+	/** Enum columns (job, duty type) sort in game order on the API, not alphabetically by label. */
+	public cols: GridColumn[] = [
+		{ field: 'sortOrder', header: 'Number', sortField: 'sortOrder' },
+		{ field: 'playedJobLabel', header: 'Job', sortField: 'playedJob' },
+		{ field: 'dutyModel.name', header: 'Duty Name', sortField: 'dutyName' },
+		{ field: 'dutyModel.dutyTypeLabel', header: 'Duty Type', sortField: 'dutyType' },
+		{ field: 'completed', header: 'Completed', sortField: 'completed' },
+		{ field: 'replacement', header: 'Replacement', sortField: 'replacement' },
+		{ field: 'notes', header: 'Notes', sortField: 'notes' },
+		{ field: 'datePlayed', header: 'Date Ran', sortField: 'datePlayed' },
+	];
 
 	public isLoadingSave = signal(false);
 	public showEditModal = signal(false);
@@ -44,23 +58,7 @@ export class RoulettesPage {
 	public showDeleteConfirmModal = signal(false);
 	public toDeleteId = signal<number | null>(null);
 
-	public searchQuery = signal<string>('');
-
-	constructor() {
-		this.cols = [
-            { field: 'sortOrder', header: 'Number' },
-			{ field: 'playedJobLabel', header: 'Job' },
-            { field: 'dutyModel.name', header: 'Duty Name' },
-            { field: 'dutyModel.dutyTypeLabel', header: 'Duty Type' },
-			{ field: 'completed', header: 'Completed' },
-			{ field: 'replacement', header: 'Replacement' },
-            { field: 'notes', header: 'Notes' },
-			{ field: 'datePlayed', header: 'Date Ran' },
-        ];
-	}
-
 	ngOnInit(): void {
-		this.reload();
 		this.resumeLogInProgress();
 	}
 
@@ -86,20 +84,6 @@ export class RoulettesPage {
 			log,
 			isNewLog: this.isNewLog(),
 		});
-	}
-
-	public reload(): void {
-		this.isLoading.set(true);
-		this.loadErrorMessage.set(null);
-		this._data.getAll().subscribe({
-			next: (logs: MentorRouletteLogModel[]) => {
-				this.logs.set(logs);
-			},
-			error: (error) => {
-				this.loadErrorMessage.set('Roulette logs could not be loaded. Check that the API is running, then refresh this grid.');
-				this._toast.showApiError('Failed to load roulette logs', error, 'Unable to load roulette logs.');
-			},
-		}).add(() => this.isLoading.set(false));
 	}
 
 	public openCreateModal(): void {
@@ -132,7 +116,7 @@ export class RoulettesPage {
 		httpObserver.subscribe({
 			next: () => {
 				this.showEditModal.set(false);
-				this.reload();
+				this.grid.reload();
 			},
 			error: (error) => {
 				this._toast.showApiError(
@@ -158,22 +142,12 @@ export class RoulettesPage {
 			next: () => {
 				this.showDeleteConfirmModal.set(false);
 				this.toDeleteId.set(null);
-				this.reload();
+				this.grid.reload();
 			},
 			error: (error) => {
 				this._toast.showApiError('Failed to delete roulette log', error, 'Unable to delete the roulette log.');
 			},
 		}).add(() => this.isLoadingDelete.set(false));
-	}
-
-	public get filteredLogs(): MentorRouletteLogModel[] {
-		const query = this.searchQuery().toLowerCase().trim();
-		return this.logs().filter(log =>
-			log.playedJobLabel?.toLowerCase().includes(query) ||
-			(log.dutyModel?.name?.toLowerCase().includes(query) ?? false) ||
-			(log.dutyModel?.dutyTypeLabel?.toLowerCase().includes(query) ?? false) ||
-			(log.notes?.toLowerCase().includes(query) ?? false)
-		);
 	}
 
 	public getLocalUtcDate(value: string | null | undefined): Date | null {
