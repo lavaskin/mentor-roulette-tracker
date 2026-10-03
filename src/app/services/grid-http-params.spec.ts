@@ -12,4 +12,14 @@ describe('toGridHttpParams', () => {
 
 		expect(params.toString()).toBe('page=1&pageSize=50');
 	});
+
+	it('repeats list filters once per value, so the API binds them to a list', () => {
+		const params = toGridHttpParams({
+			page: 1,
+			pageSize: 50,
+			filters: { expansions: [5, 6], completed: false, playedFrom: '2026-03-01T05:00:00.000Z', jobs: [] },
+		});
+
+		expect(params.toString()).toBe('page=1&pageSize=50&expansions=5&expansions=6&completed=false&playedFrom=2026-03-01T05:00:00.000Z');
+	});
 });

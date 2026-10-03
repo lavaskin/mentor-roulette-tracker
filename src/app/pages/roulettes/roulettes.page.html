@@ -2,13 +2,18 @@
 	<h1 class="mr-auto text-2xl font-bold">Roulettes</h1>
 
 	<!-- Page Actions -->
-	@if (grid.isSearching()) {
+	@if (grid.isFiltered()) {
 		<p class="text-lg italic">{{ grid.totalCount() }} filtered results</p>
 	}
 
 	<mrt-search-bar
 		(ngModelChange)="grid.setSearch($event)"
 		placeholder="Search Logs..." />
+
+	<mrt-grid-filter
+		[definitions]="filterDefinitions"
+		[value]="appliedFilters()"
+		(apply)="onFiltersApplied($event)" />
 
 	<button
 		pButton
@@ -26,7 +31,7 @@
 		(click)="openCreateModal()"></button>
 </div>
 
-<!-- Paging, sorting and search all run on the API: see ServerGrid -->
+<!-- Paging, sorting, search and filters all run on the API: see ServerGrid -->
 <p-table
 	[columns]="cols"
 	[value]="grid.items()"
@@ -109,7 +114,7 @@
 								class="p-button-outlined"
 								(click)="grid.reload()"></button>
 						</div>
-					} @else if (!grid.isSearching()) {
+					} @else if (!grid.isFiltered()) {
 						<div class="grid-state__content">
 							<p class="grid-state__title">No roulette logs yet</p>
 							<p class="grid-state__text">Log a roulette run to populate this history table.</p>
@@ -117,7 +122,7 @@
 					} @else {
 						<div class="grid-state__content">
 							<p class="grid-state__title">No matching roulette logs</p>
-							<p class="grid-state__text">Adjust the search terms or clear the filter to see more results.</p>
+							<p class="grid-state__text">Adjust the search terms or filters to see more results.</p>
 						</div>
 					}
 				</div>

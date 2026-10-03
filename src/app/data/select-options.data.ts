@@ -1,7 +1,8 @@
-import { DutyTypeEnum } from "@app/models/enums/duty-type.enum";
-import { ExpansionEnum } from "@app/models/enums/expansion.enum";
-import { JobEnum } from "@app/models/enums/jobs.enum";
-import { SelectOptionModel } from "@app/models/select-option.model";
+import { ALL_JOBS, JOB_SUB_ROLES, ROLE_LABELS } from '@app/data/jobs.data';
+import { DutyTypeEnum } from '@app/models/enums/duty-type.enum';
+import { ExpansionEnum } from '@app/models/enums/expansion.enum';
+import { JobModel } from '@app/models/job.model';
+import { SelectOptionModel } from '@app/models/select-option.model';
 
 export const DutiesSelectOptions: SelectOptionModel[] = [
 	{ label: 'Guildhest', value: DutyTypeEnum.Guildhest },
@@ -24,34 +25,18 @@ export const ExpansionsSelectOptions: SelectOptionModel[] = [
 	{ label: 'Dawntrail', value: ExpansionEnum.Dawntrail },
 ];
 
-export const JobSelectOptions: SelectOptionModel[] = [
-	{ label: 'PLD | Paladin', value: JobEnum.Paladin },
-	{ label: 'WAR | Warrior', value: JobEnum.Warrior },
-	{ label: 'DRK | Dark Knight', value: JobEnum.DarkKnight },
-	{ label: 'GNB | Gunbreaker', value: JobEnum.Gunbreaker },
+export const JobSubRoleSelectOptions: SelectOptionModel[] = JOB_SUB_ROLES.map((role) => ({
+	label: ROLE_LABELS[role],
+	value: role,
+}));
 
-	{ label: 'WHM | White Mage', value: JobEnum.WhiteMage },
-	{ label: 'SCH | Scholar', value: JobEnum.Scholar },
-	{ label: 'AST | Astrologian', value: JobEnum.Astrologian },
-	{ label: 'SGE | Sage', value: JobEnum.Sage },
+/** e.g. "PLD | Paladin" */
+export function jobSelectOption(job: JobModel): SelectOptionModel {
+	return { label: `${job.abbrev} | ${job.name}`, value: job.id };
+}
 
-	{ label: 'MNK | Monk', value: JobEnum.Monk },
-	{ label: 'DRG | Dragoon', value: JobEnum.Dragoon },
-	{ label: 'NIN | Ninja', value: JobEnum.Ninja },
-	{ label: 'SAM | Samurai', value: JobEnum.Samurai },
-	{ label: 'RPR | Reaper', value: JobEnum.Reaper },
-	{ label: 'VPR | Viper', value: JobEnum.Viper },
-
-	{ label: 'BLM | Black Mage', value: JobEnum.BlackMage },
-	{ label: 'SMN | Summoner', value: JobEnum.Summoner },
-	{ label: 'RDM | Red Mage', value: JobEnum.RedMage },
-	{ label: 'PCT | Pictomancer', value: JobEnum.Pictomancer },
-
-	{ label: 'BRD | Bard', value: JobEnum.Bard },
-	{ label: 'MCH | Machinist', value: JobEnum.Machinist },
-	{ label: 'DNC | Dancer', value: JobEnum.Dancer },
-
-	// Limited Jobs: These are mapped in the DB, but obviously can't be used in mentor roulettes.
-	// { label: 'BLU | Blue Mage', value: JobEnum.BlueMage },
-	// { label: 'BST | Beast Master', value: JobEnum.BeastMaster },
-];
+/**
+ * The jobs a mentor roulette can be run on. The limited jobs (Blue Mage, Beast Master) are in the
+ * database, but aren't in `ALL_JOBS` because they can't queue for mentor roulettes.
+ */
+export const JobSelectOptions: SelectOptionModel[] = ALL_JOBS.map(jobSelectOption);

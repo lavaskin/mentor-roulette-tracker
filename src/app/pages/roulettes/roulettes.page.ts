@@ -2,15 +2,18 @@ import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ConfirmModal } from '@app/components/confirm-modal/confirm-modal';
 import { EditMentorLogModal } from '@app/components/edit-mentor-log-modal/edit-mentor-log-modal';
+import { GridFilter } from '@app/components/grid-filter/grid-filter';
 import { SearchBar } from '@app/components/search-bar/search-bar';
 import { MentorRouletteLogModel } from '@app/models/entity/mentor-roulette-log.model';
 import { NEW_DUTY_HANDOFF_KEY, NewDutyHandoffModel, RESUME_LOG_HANDOFF_KEY, ResumeLogHandoffModel } from '@app/models/navigation-handoff.model';
 import { MentorRouletteLogService } from '@app/services/mentor-roulette-log.service';
 import { NavigationHandoffService } from '@app/services/navigation-handoff.service';
 import { ToastService } from '@app/services/toast.service';
+import { GridFilterState, loadFilterState, saveFilterState, toFilterParams } from '@app/shared/grid-filter';
 import { GridColumn, ServerGrid } from '@app/shared/server-grid';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
+import { ROULETTE_FILTERS, ROULETTE_FILTERS_STORAGE_KEY } from './roulettes.filters';
 
 @Component({
 	selector: 'mrt-page-roulettes',
@@ -21,6 +24,7 @@ import { TableModule } from 'primeng/table';
 		ButtonModule,
 		EditMentorLogModal,
 		SearchBar,
+		GridFilter,
 	],
 	templateUrl: './roulettes.page.html',
 	styleUrl: './roulettes.page.scss',
@@ -36,6 +40,11 @@ export class RoulettesPage {
 		(request) => this._data.getPage(request),
 		(error) => this._toast.showApiError('Failed to load roulette logs', error, 'Unable to load roulette logs.'),
 	);
+
+	public filterDefinitions = ROULETTE_FILTERS;
+
+	/** Restored from this tab's session, and saved again on every apply */
+	public appliedFilters = signal<GridFilterState>(loadFilterState(ROULETTE_FILTERS_STORAGE_KEY, ROULETTE_FILTERS));
 
 	/** Enum columns (job, duty type) sort in game order on the API, not alphabetically by label. */
 	public cols: GridColumn[] = [
@@ -58,8 +67,19 @@ export class RoulettesPage {
 	public showDeleteConfirmModal = signal(false);
 	public toDeleteId = signal<number | null>(null);
 
+	constructor() {
+		// Before the table initializes, so its first load already includes the restored filters
+		this.grid.setFilters(toFilterParams(ROULETTE_FILTERS, this.appliedFilters()));
+	}
+
 	ngOnInit(): void {
 		this.resumeLogInProgress();
+	}
+
+	public onFiltersApplied(filters: GridFilterState): void {
+		this.appliedFilters.set(filters);
+		saveFilterState(ROULETTE_FILTERS_STORAGE_KEY, filters);
+		this.grid.setFilters(toFilterParams(ROULETTE_FILTERS, filters));
 	}
 
 	/** Reopens the log modal if the user was bounced to the duties page to create a duty. */

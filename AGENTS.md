@@ -9,6 +9,10 @@ Angular 21 standalone app (Single Project Architecture). Entry: `src/main.ts`. S
 - **Configurables**: `src/app/config/` (e.g. chart.js defaults)
 - **Test files alongside sources** with `.spec.ts` suffix; run all tests: `npm test`
 
+## Backend
+
+This project consumes data from the ffxiv-api, a companion project. Please look for that when making changes that require full-stack attention.
+
 ## Commands
 
 | Task | Command |

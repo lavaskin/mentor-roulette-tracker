@@ -1,0 +1,108 @@
+<p-button
+	#trigger
+	label="Filters"
+	icon="pi pi-filter"
+	[outlined]="true"
+	[badge]="badge()"
+	[ariaLabel]="buttonAriaLabel()"
+	[pt]="triggerPt()"
+	(onClick)="toggle($event)" />
+
+<p-popover ariaLabel="Filters" (onShow)="onOpened()" (onHide)="onClosed()">
+	<!-- A template, so the controls only exist while the popover is open -->
+	<ng-template #content>
+		<!-- PrimeNG marks the popover aria-modal, so keep Tab inside it like a dialog -->
+		<div class="flex w-80 flex-col gap-4" [id]="panelId" pFocusTrap>
+			@for (filter of definitions(); track filter.key) {
+				<!-- Switch on a local, not filter.type: @default never narrows a switched-on property's object to never too -->
+				@let type = filter.type;
+				<div class="flex flex-col gap-2">
+					@switch (type) {
+						@case ('multiselect') {
+							<label class="font-semibold" [for]="idFor(filter)">{{ filter.label }}</label>
+							<p-multiselect
+								[inputId]="idFor(filter)"
+								[options]="options()[filter.key]"
+								optionLabel="label"
+								optionValue="value"
+								[ngModel]="selections()[filter.key]"
+								(ngModelChange)="setValue(filter.key, $event ?? [])"
+								[filter]="isSearchable(filter)"
+								[maxSelectedLabels]="2"
+								selectedItemsLabel="{0} selected"
+								placeholder="Any"
+								[showClear]="true"
+								[fluid]="true"
+								(onPanelShow)="panelOpened()"
+								(onPanelHide)="panelClosed()" />
+						}
+						@case ('boolean') {
+							<span class="font-semibold" [id]="idFor(filter)">{{ filter.label }}</span>
+							<p-selectbutton
+								[options]="booleanOptions"
+								optionLabel="label"
+								optionValue="value"
+								[allowEmpty]="false"
+								[ngModel]="flag(filter.key)"
+								(ngModelChange)="setValue(filter.key, $event)"
+								[ariaLabelledBy]="idFor(filter)"
+								[fluid]="true" />
+						}
+						@case ('dateRange') {
+							<span class="font-semibold" [id]="idFor(filter)">{{ filter.label }}</span>
+							<div class="grid grid-cols-2 gap-2" role="group" [attr.aria-labelledby]="idFor(filter)">
+								<p-datepicker
+									[inputId]="idFor(filter) + '-from'"
+									[ngModel]="dates()[filter.key].from"
+									(ngModelChange)="setDate(filter.key, 'from', $event)"
+									[maxDate]="dates()[filter.key].to"
+									dateFormat="mm/dd/yy"
+									placeholder="From"
+									ariaLabel="From"
+									[showButtonBar]="true"
+									styleClass="w-full"
+									inputStyleClass="w-full"
+									(onShow)="panelOpened()"
+									(onClose)="panelClosed()" />
+								<p-datepicker
+									[inputId]="idFor(filter) + '-to'"
+									[ngModel]="dates()[filter.key].to"
+									(ngModelChange)="setDate(filter.key, 'to', $event)"
+									[minDate]="dates()[filter.key].from"
+									dateFormat="mm/dd/yy"
+									placeholder="To"
+									ariaLabel="To"
+									[showButtonBar]="true"
+									styleClass="w-full"
+									inputStyleClass="w-full"
+									(onShow)="panelOpened()"
+									(onClose)="panelClosed()" />
+							</div>
+						}
+						<!-- A new filter type without a case here fails the template type check -->
+						@default never;
+					}
+				</div>
+			}
+
+			<div class="flex justify-between gap-2 pt-2">
+				<button
+					pButton
+					type="button"
+					label="Clear"
+					icon="pi pi-filter-slash"
+					size="small"
+					class="p-button-secondary"
+					(click)="onClear()"></button>
+
+				<button
+					pButton
+					type="button"
+					label="Apply"
+					icon="pi pi-check"
+					size="small"
+					(click)="onApply()"></button>
+			</div>
+		</div>
+	</ng-template>
+</p-popover>

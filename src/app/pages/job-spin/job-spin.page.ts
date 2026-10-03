@@ -5,25 +5,15 @@ import {
 	getJobsForCategory,
 	getRoleSegments,
 	jobsToSegments,
-	ROLE_COLORS,
-	ROLE_LABELS,
 	SPIN_CATEGORY_OPTIONS,
 	SpinCategory,
 	SpinSegment,
 } from '@app/data/jobs.data';
-import { JobRoleEnum } from '@app/models/enums/job-role.enum';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
-
-interface ToggleItem {
-	id: string;
-	label: string;
-	sublabel?: string;
-	color: string;
-}
 
 @Component({
 	selector: 'mrt-page-job-spin',
@@ -49,34 +39,12 @@ export class JobSpinPage {
 
 	public readonly isRolesMode = computed(() => this.category() === 'roles');
 
-	public readonly toggleItems = computed<ToggleItem[]>(() => {
-		if (this.isRolesMode()) {
-			return (Object.values(JobRoleEnum) as JobRoleEnum[]).map((role) => ({
-				id: role,
-				label: ROLE_LABELS[role],
-				color: ROLE_COLORS[role],
-			}));
-		}
-
-		return getJobsForCategory(this.category()).map((job) => ({
-			id: String(job.id),
-			label: job.abbrev,
-			sublabel: job.name,
-			color: job.color,
-		}));
-	});
+	/** Every segment the category offers, enabled or not */
+	public readonly toggleItems = computed<SpinSegment[]>(() => this.segmentsFor(this.category()));
 
 	public readonly segments = computed<SpinSegment[]>(() => {
 		const enabled = this.enabledIds();
-
-		if (this.isRolesMode()) {
-			return getRoleSegments().filter((segment) => enabled.has(segment.id));
-		}
-
-		const jobs = getJobsForCategory(this.category()).filter((job) =>
-			enabled.has(String(job.id)),
-		);
-		return jobsToSegments(jobs);
+		return this.toggleItems().filter((segment) => enabled.has(segment.id));
 	});
 
 	public onCategoryChange(value: SpinCategory | null | undefined): void {
@@ -129,10 +97,10 @@ export class JobSpinPage {
 	}
 
 	private defaultEnabledIds(category: SpinCategory): Set<string> {
-		if (category === 'roles') {
-			return new Set((Object.values(JobRoleEnum) as JobRoleEnum[]).map(String));
-		}
+		return new Set(this.segmentsFor(category).map((segment) => segment.id));
+	}
 
-		return new Set(getJobsForCategory(category).map((job) => String(job.id)));
+	private segmentsFor(category: SpinCategory): SpinSegment[] {
+		return category === 'roles' ? getRoleSegments() : jobsToSegments(getJobsForCategory(category));
 	}
 }

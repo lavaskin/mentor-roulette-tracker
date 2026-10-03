@@ -94,6 +94,48 @@ describe('ServerGrid', () => {
 		expect(grid.isSearching()).toBe(false);
 	});
 
+	it('goes back to the first page when the filters change, keeping the sort and search', () => {
+		grid.onLazyLoad({ first: 100, rows: 50, sortField: 'name', sortOrder: 1 });
+		grid.setSearch('aurum');
+
+		grid.setFilters({ expansions: [5, 6] });
+
+		expect(grid.first()).toBe(0);
+		expect(grid.isFiltered()).toBe(true);
+		expect(requests[2].request).toEqual({
+			page: 1,
+			pageSize: 50,
+			search: 'aurum',
+			sortBy: 'name',
+			sortDirection: 'asc',
+			filters: { expansions: [5, 6] },
+		});
+
+		grid.setFilters({});
+		expect(requests[3].request.filters).toBeUndefined();
+	});
+
+	it('counts as filtered when only the search or only the filters are set', () => {
+		grid.onLazyLoad({ first: 0, rows: 50 });
+		expect(grid.isFiltered()).toBe(false);
+
+		grid.setFilters({ completed: true });
+		expect(grid.isSearching()).toBe(false);
+		expect(grid.isFiltered()).toBe(true);
+	});
+
+	it('holds filters set before the table initializes for its first load', () => {
+		grid.setFilters({ completed: true });
+
+		expect(requests).toHaveLength(0);
+
+		grid.onLazyLoad({ first: 0, rows: 50, sortField: 'sortOrder', sortOrder: -1 });
+
+		expect(requests).toHaveLength(1);
+		expect(requests[0].request.filters).toEqual({ completed: true });
+		expect(requests[0].request.sortBy).toBe('sortOrder');
+	});
+
 	it('keeps only the latest page when requests overlap', () => {
 		grid.onLazyLoad({ first: 0, rows: 50 });
 		grid.onLazyLoad({ first: 50, rows: 50 });

@@ -1,5 +1,5 @@
 import { JobEnum } from '@app/models/enums/jobs.enum';
-import { JobRoleEnum } from '@app/models/enums/job-role.enum';
+import { JobSubRoleEnum } from '@app/models/enums/job-sub-role.enum';
 import { JobModel } from '@app/models/job.model';
 
 export type SpinCategory =
@@ -24,20 +24,29 @@ export interface SpinSegment {
 	color: string;
 }
 
-export const ROLE_COLORS: Record<JobRoleEnum, string> = {
-	[JobRoleEnum.Tank]: '#3a7bd5',
-	[JobRoleEnum.Healer]: '#2d9f4e',
-	[JobRoleEnum.MeleeDps]: '#c23a3a',
-	[JobRoleEnum.MagicalRangedDps]: '#8b5cf6',
-	[JobRoleEnum.PhysicalRangedDps]: '#d4a017',
+/** Every role, in game order. A list, because a numeric enum's `Object.values` also holds its names. */
+export const JOB_SUB_ROLES: readonly JobSubRoleEnum[] = [
+	JobSubRoleEnum.Tank,
+	JobSubRoleEnum.Healer,
+	JobSubRoleEnum.MeleeDps,
+	JobSubRoleEnum.MagicalRangedDps,
+	JobSubRoleEnum.PhysicalRangedDps,
+];
+
+export const ROLE_COLORS: Record<JobSubRoleEnum, string> = {
+	[JobSubRoleEnum.Tank]: '#3a7bd5',
+	[JobSubRoleEnum.Healer]: '#2d9f4e',
+	[JobSubRoleEnum.MeleeDps]: '#c23a3a',
+	[JobSubRoleEnum.MagicalRangedDps]: '#8b5cf6',
+	[JobSubRoleEnum.PhysicalRangedDps]: '#d4a017',
 };
 
-export const ROLE_LABELS: Record<JobRoleEnum, string> = {
-	[JobRoleEnum.Tank]: 'Tank',
-	[JobRoleEnum.Healer]: 'Healer',
-	[JobRoleEnum.MeleeDps]: 'Melee DPS',
-	[JobRoleEnum.MagicalRangedDps]: 'Magical Ranged',
-	[JobRoleEnum.PhysicalRangedDps]: 'Physical Ranged',
+export const ROLE_LABELS: Record<JobSubRoleEnum, string> = {
+	[JobSubRoleEnum.Tank]: 'Tank',
+	[JobSubRoleEnum.Healer]: 'Healer',
+	[JobSubRoleEnum.MeleeDps]: 'Melee DPS',
+	[JobSubRoleEnum.MagicalRangedDps]: 'Magical Ranged',
+	[JobSubRoleEnum.PhysicalRangedDps]: 'Physical Ranged',
 };
 
 export const SPIN_CATEGORY_OPTIONS: SpinCategoryOption[] = [
@@ -52,12 +61,12 @@ export const SPIN_CATEGORY_OPTIONS: SpinCategoryOption[] = [
 ];
 
 /** Shade multipliers per job within a role (light → dark) for wheel contrast. */
-const ROLE_SHADE_STEPS: Record<JobRoleEnum, number[]> = {
-	[JobRoleEnum.Tank]: [1.28, 1.1, 0.88, 0.68],
-	[JobRoleEnum.Healer]: [1.28, 1.1, 0.88, 0.68],
-	[JobRoleEnum.MeleeDps]: [1.32, 1.16, 1.0, 0.84, 0.68, 0.54],
-	[JobRoleEnum.MagicalRangedDps]: [1.28, 1.1, 0.88, 0.68],
-	[JobRoleEnum.PhysicalRangedDps]: [1.28, 1.02, 0.76],
+const ROLE_SHADE_STEPS: Record<JobSubRoleEnum, number[]> = {
+	[JobSubRoleEnum.Tank]: [1.28, 1.1, 0.88, 0.68],
+	[JobSubRoleEnum.Healer]: [1.28, 1.1, 0.88, 0.68],
+	[JobSubRoleEnum.MeleeDps]: [1.32, 1.16, 1.0, 0.84, 0.68, 0.54],
+	[JobSubRoleEnum.MagicalRangedDps]: [1.28, 1.1, 0.88, 0.68],
+	[JobSubRoleEnum.PhysicalRangedDps]: [1.28, 1.02, 0.76],
 };
 
 function clampByte(value: number): number {
@@ -73,52 +82,52 @@ function shadeHex(hex: string, factor: number): string {
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-function jobColor(role: JobRoleEnum, indexInRole: number): string {
+function jobColor(role: JobSubRoleEnum, indexInRole: number): string {
 	const steps = ROLE_SHADE_STEPS[role];
 	const factor = steps[indexInRole] ?? steps[steps.length - 1] ?? 1;
 	return shadeHex(ROLE_COLORS[role], factor);
 }
 
 export const ALL_JOBS: JobModel[] = [
-	{ id: JobEnum.Paladin, abbrev: 'PLD', name: 'Paladin', role: JobRoleEnum.Tank, color: jobColor(JobRoleEnum.Tank, 0) },
-	{ id: JobEnum.Warrior, abbrev: 'WAR', name: 'Warrior', role: JobRoleEnum.Tank, color: jobColor(JobRoleEnum.Tank, 1) },
-	{ id: JobEnum.DarkKnight, abbrev: 'DRK', name: 'Dark Knight', role: JobRoleEnum.Tank, color: jobColor(JobRoleEnum.Tank, 2) },
-	{ id: JobEnum.Gunbreaker, abbrev: 'GNB', name: 'Gunbreaker', role: JobRoleEnum.Tank, color: jobColor(JobRoleEnum.Tank, 3) },
+	{ id: JobEnum.Paladin, abbrev: 'PLD', name: 'Paladin', role: JobSubRoleEnum.Tank, color: jobColor(JobSubRoleEnum.Tank, 0) },
+	{ id: JobEnum.Warrior, abbrev: 'WAR', name: 'Warrior', role: JobSubRoleEnum.Tank, color: jobColor(JobSubRoleEnum.Tank, 1) },
+	{ id: JobEnum.DarkKnight, abbrev: 'DRK', name: 'Dark Knight', role: JobSubRoleEnum.Tank, color: jobColor(JobSubRoleEnum.Tank, 2) },
+	{ id: JobEnum.Gunbreaker, abbrev: 'GNB', name: 'Gunbreaker', role: JobSubRoleEnum.Tank, color: jobColor(JobSubRoleEnum.Tank, 3) },
 
-	{ id: JobEnum.WhiteMage, abbrev: 'WHM', name: 'White Mage', role: JobRoleEnum.Healer, color: jobColor(JobRoleEnum.Healer, 0) },
-	{ id: JobEnum.Scholar, abbrev: 'SCH', name: 'Scholar', role: JobRoleEnum.Healer, color: jobColor(JobRoleEnum.Healer, 1) },
-	{ id: JobEnum.Astrologian, abbrev: 'AST', name: 'Astrologian', role: JobRoleEnum.Healer, color: jobColor(JobRoleEnum.Healer, 2) },
-	{ id: JobEnum.Sage, abbrev: 'SGE', name: 'Sage', role: JobRoleEnum.Healer, color: jobColor(JobRoleEnum.Healer, 3) },
+	{ id: JobEnum.WhiteMage, abbrev: 'WHM', name: 'White Mage', role: JobSubRoleEnum.Healer, color: jobColor(JobSubRoleEnum.Healer, 0) },
+	{ id: JobEnum.Scholar, abbrev: 'SCH', name: 'Scholar', role: JobSubRoleEnum.Healer, color: jobColor(JobSubRoleEnum.Healer, 1) },
+	{ id: JobEnum.Astrologian, abbrev: 'AST', name: 'Astrologian', role: JobSubRoleEnum.Healer, color: jobColor(JobSubRoleEnum.Healer, 2) },
+	{ id: JobEnum.Sage, abbrev: 'SGE', name: 'Sage', role: JobSubRoleEnum.Healer, color: jobColor(JobSubRoleEnum.Healer, 3) },
 
-	{ id: JobEnum.Monk, abbrev: 'MNK', name: 'Monk', role: JobRoleEnum.MeleeDps, color: jobColor(JobRoleEnum.MeleeDps, 0) },
-	{ id: JobEnum.Dragoon, abbrev: 'DRG', name: 'Dragoon', role: JobRoleEnum.MeleeDps, color: jobColor(JobRoleEnum.MeleeDps, 1) },
-	{ id: JobEnum.Ninja, abbrev: 'NIN', name: 'Ninja', role: JobRoleEnum.MeleeDps, color: jobColor(JobRoleEnum.MeleeDps, 2) },
-	{ id: JobEnum.Samurai, abbrev: 'SAM', name: 'Samurai', role: JobRoleEnum.MeleeDps, color: jobColor(JobRoleEnum.MeleeDps, 3) },
-	{ id: JobEnum.Reaper, abbrev: 'RPR', name: 'Reaper', role: JobRoleEnum.MeleeDps, color: jobColor(JobRoleEnum.MeleeDps, 4) },
-	{ id: JobEnum.Viper, abbrev: 'VPR', name: 'Viper', role: JobRoleEnum.MeleeDps, color: jobColor(JobRoleEnum.MeleeDps, 5) },
+	{ id: JobEnum.Monk, abbrev: 'MNK', name: 'Monk', role: JobSubRoleEnum.MeleeDps, color: jobColor(JobSubRoleEnum.MeleeDps, 0) },
+	{ id: JobEnum.Dragoon, abbrev: 'DRG', name: 'Dragoon', role: JobSubRoleEnum.MeleeDps, color: jobColor(JobSubRoleEnum.MeleeDps, 1) },
+	{ id: JobEnum.Ninja, abbrev: 'NIN', name: 'Ninja', role: JobSubRoleEnum.MeleeDps, color: jobColor(JobSubRoleEnum.MeleeDps, 2) },
+	{ id: JobEnum.Samurai, abbrev: 'SAM', name: 'Samurai', role: JobSubRoleEnum.MeleeDps, color: jobColor(JobSubRoleEnum.MeleeDps, 3) },
+	{ id: JobEnum.Reaper, abbrev: 'RPR', name: 'Reaper', role: JobSubRoleEnum.MeleeDps, color: jobColor(JobSubRoleEnum.MeleeDps, 4) },
+	{ id: JobEnum.Viper, abbrev: 'VPR', name: 'Viper', role: JobSubRoleEnum.MeleeDps, color: jobColor(JobSubRoleEnum.MeleeDps, 5) },
 
-	{ id: JobEnum.BlackMage, abbrev: 'BLM', name: 'Black Mage', role: JobRoleEnum.MagicalRangedDps, color: jobColor(JobRoleEnum.MagicalRangedDps, 0) },
-	{ id: JobEnum.Summoner, abbrev: 'SMN', name: 'Summoner', role: JobRoleEnum.MagicalRangedDps, color: jobColor(JobRoleEnum.MagicalRangedDps, 1) },
-	{ id: JobEnum.RedMage, abbrev: 'RDM', name: 'Red Mage', role: JobRoleEnum.MagicalRangedDps, color: jobColor(JobRoleEnum.MagicalRangedDps, 2) },
-	{ id: JobEnum.Pictomancer, abbrev: 'PCT', name: 'Pictomancer', role: JobRoleEnum.MagicalRangedDps, color: jobColor(JobRoleEnum.MagicalRangedDps, 3) },
+	{ id: JobEnum.BlackMage, abbrev: 'BLM', name: 'Black Mage', role: JobSubRoleEnum.MagicalRangedDps, color: jobColor(JobSubRoleEnum.MagicalRangedDps, 0) },
+	{ id: JobEnum.Summoner, abbrev: 'SMN', name: 'Summoner', role: JobSubRoleEnum.MagicalRangedDps, color: jobColor(JobSubRoleEnum.MagicalRangedDps, 1) },
+	{ id: JobEnum.RedMage, abbrev: 'RDM', name: 'Red Mage', role: JobSubRoleEnum.MagicalRangedDps, color: jobColor(JobSubRoleEnum.MagicalRangedDps, 2) },
+	{ id: JobEnum.Pictomancer, abbrev: 'PCT', name: 'Pictomancer', role: JobSubRoleEnum.MagicalRangedDps, color: jobColor(JobSubRoleEnum.MagicalRangedDps, 3) },
 
-	{ id: JobEnum.Bard, abbrev: 'BRD', name: 'Bard', role: JobRoleEnum.PhysicalRangedDps, color: jobColor(JobRoleEnum.PhysicalRangedDps, 0) },
-	{ id: JobEnum.Machinist, abbrev: 'MCH', name: 'Machinist', role: JobRoleEnum.PhysicalRangedDps, color: jobColor(JobRoleEnum.PhysicalRangedDps, 1) },
-	{ id: JobEnum.Dancer, abbrev: 'DNC', name: 'Dancer', role: JobRoleEnum.PhysicalRangedDps, color: jobColor(JobRoleEnum.PhysicalRangedDps, 2) },
+	{ id: JobEnum.Bard, abbrev: 'BRD', name: 'Bard', role: JobSubRoleEnum.PhysicalRangedDps, color: jobColor(JobSubRoleEnum.PhysicalRangedDps, 0) },
+	{ id: JobEnum.Machinist, abbrev: 'MCH', name: 'Machinist', role: JobSubRoleEnum.PhysicalRangedDps, color: jobColor(JobSubRoleEnum.PhysicalRangedDps, 1) },
+	{ id: JobEnum.Dancer, abbrev: 'DNC', name: 'Dancer', role: JobSubRoleEnum.PhysicalRangedDps, color: jobColor(JobSubRoleEnum.PhysicalRangedDps, 2) },
 ];
 
-const DPS_ROLES: JobRoleEnum[] = [
-	JobRoleEnum.MeleeDps,
-	JobRoleEnum.MagicalRangedDps,
-	JobRoleEnum.PhysicalRangedDps,
+const DPS_ROLES: JobSubRoleEnum[] = [
+	JobSubRoleEnum.MeleeDps,
+	JobSubRoleEnum.MagicalRangedDps,
+	JobSubRoleEnum.PhysicalRangedDps,
 ];
 
-const CATEGORY_TO_ROLE: Partial<Record<SpinCategory, JobRoleEnum>> = {
-	tank: JobRoleEnum.Tank,
-	healer: JobRoleEnum.Healer,
-	melee: JobRoleEnum.MeleeDps,
-	magical_ranged: JobRoleEnum.MagicalRangedDps,
-	physical_ranged: JobRoleEnum.PhysicalRangedDps,
+const CATEGORY_TO_ROLE: Partial<Record<SpinCategory, JobSubRoleEnum>> = {
+	tank: JobSubRoleEnum.Tank,
+	healer: JobSubRoleEnum.Healer,
+	melee: JobSubRoleEnum.MeleeDps,
+	magical_ranged: JobSubRoleEnum.MagicalRangedDps,
+	physical_ranged: JobSubRoleEnum.PhysicalRangedDps,
 };
 
 export function getJobsForCategory(category: SpinCategory): JobModel[] {
@@ -130,8 +139,9 @@ export function getJobsForCategory(category: SpinCategory): JobModel[] {
 		return ALL_JOBS.filter((job) => DPS_ROLES.includes(job.role));
 	}
 
+	// Not `!role`: Tank is 0
 	const role = CATEGORY_TO_ROLE[category];
-	if (!role) {
+	if (role === undefined) {
 		return [...ALL_JOBS];
 	}
 
@@ -139,8 +149,8 @@ export function getJobsForCategory(category: SpinCategory): JobModel[] {
 }
 
 export function getRoleSegments(): SpinSegment[] {
-	return (Object.values(JobRoleEnum) as JobRoleEnum[]).map((role) => ({
-		id: role,
+	return JOB_SUB_ROLES.map((role) => ({
+		id: String(role),
 		label: ROLE_LABELS[role],
 		color: ROLE_COLORS[role],
 	}));

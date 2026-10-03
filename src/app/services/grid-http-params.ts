@@ -20,5 +20,15 @@ export function toGridHttpParams(request: GridRequestModel): HttpParams {
 		}
 	}
 
+	for (const [name, value] of Object.entries(request.filters ?? {})) {
+		if (Array.isArray(value)) {
+			for (const item of value) {
+				params = params.append(name, item);
+			}
+		} else {
+			params = params.set(name, value as string | number | boolean);
+		}
+	}
+
 	return params;
 }

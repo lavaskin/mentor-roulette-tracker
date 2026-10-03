@@ -3,10 +3,15 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { GridFilter } from '@app/components/grid-filter/grid-filter';
 import { SearchBar } from '@app/components/search-bar/search-bar';
 import { MentorRouletteLogModel } from '@app/models/entity/mentor-roulette-log.model';
+import { ExpansionEnum } from '@app/models/enums/expansion.enum';
+import { JobSubRoleEnum } from '@app/models/enums/job-sub-role.enum';
 import { PagedResponseModel } from '@app/models/paged-response.model';
+import { emptyFilterState, loadFilterState, saveFilterState } from '@app/shared/grid-filter';
 import { MessageService } from 'primeng/api';
+import { ROULETTE_FILTERS, ROULETTE_FILTERS_STORAGE_KEY } from './roulettes.filters';
 import { RoulettesPage } from './roulettes.page';
 
 function pageOf(items: MentorRouletteLogModel[], totalCount: number = items.length): PagedResponseModel<MentorRouletteLogModel> {
@@ -30,6 +35,7 @@ describe('RoulettesPage', () => {
 
 	beforeEach(() => {
 		history.replaceState({}, '');
+		sessionStorage.clear();
 
 		TestBed.configureTestingModule({
 			providers: [
@@ -97,6 +103,40 @@ describe('RoulettesPage', () => {
 		fixture.detectChanges();
 
 		expect(text()).toContain('3 filtered results');
+	});
+
+	it('sends applied filters to the API from page 1, and keeps them for the session', () => {
+		render();
+		const filters = { ...emptyFilterState(ROULETTE_FILTERS), expansions: [ExpansionEnum.Endwalker], completed: false };
+
+		fixture.debugElement.query(By.directive(GridFilter)).componentInstance.apply.emit(filters);
+
+		const request = http.expectOne(request => request.method === 'GET');
+		expect(request.request.params.toString())
+			.toBe('page=1&pageSize=50&sortBy=sortOrder&sortDirection=desc&expansions=5&completed=false');
+		request.flush(pageOf([DOMA_CASTLE_RUN], 4));
+		fixture.detectChanges();
+
+		expect(text()).toContain('4 filtered results');
+		expect(fixture.nativeElement.querySelector('.p-badge').textContent.trim()).toBe('2');
+		expect(loadFilterState(ROULETTE_FILTERS_STORAGE_KEY, ROULETTE_FILTERS)).toEqual(filters);
+	});
+
+	it('restores the session filters into its first load', () => {
+		saveFilterState(ROULETTE_FILTERS_STORAGE_KEY, {
+			...emptyFilterState(ROULETTE_FILTERS),
+			subRoles: [JobSubRoleEnum.Healer],
+			datePlayed: { from: '2026-03-01', to: null },
+		});
+
+		fixture = TestBed.createComponent(RoulettesPage);
+		fixture.detectChanges();
+
+		const request = http.expectOne(request => request.method === 'GET');
+		expect(request.request.params.getAll('subRoles')).toEqual(['1']);
+		expect(request.request.params.get('playedFrom')).toBe('2026-03-01T05:00:00.000Z'); // midnight in New York, see test-setup.ts
+		expect(request.request.params.get('sortBy')).toBe('sortOrder');
+		request.flush(pageOf([DOMA_CASTLE_RUN], 1));
 	});
 
 	it('shows a refreshable error when the page fails to load', () => {
